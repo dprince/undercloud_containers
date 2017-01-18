@@ -84,9 +84,9 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/40 && git cherry-pick FETCH_HEAD
 
-# MySQL
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/22 && git cherry-pick FETCH_HEAD
-#sed -e '/.*MySQL/d' -i /root/tripleo-heat-templates/environments/docker.yaml
+# MySQL NOT WORKING YET!
+#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/22 && git cherry-pick FETCH_HEAD
+sed -e '/.*MySQL/d' -i /root/tripleo-heat-templates/environments/docker.yaml
 
 # TRIPLEO_CLIENT
 cd
@@ -105,13 +105,14 @@ git fetch https://git.openstack.org/openstack/heat-agents refs/changes/23/420723
 sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-config/hooks/json-file
 sudo cp heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
 
-cd /etc/puppet/modules
-rm -f mysql
-git clone https://github.com/dprince/puppetlabs-mysql.git mysql
-cd mysql
-git checkout -b noop_providers remotes/origin/noop_providers
-cd
+#cd /etc/puppet/modules
+#rm -f mysql
+#git clone https://github.com/dprince/puppetlabs-mysql.git mysql
+#cd mysql
+#git checkout -b noop_providers remotes/origin/noop_providers
+#cd
 
+# this is how you inject an admin password
 cat > /root/tripleo-undercloud-passwords.yaml <<-EOF_CAT
 parameter_defaults:
   AdminPassword: HnTzjCGP6HyXmWs9FzrdHRxMs
@@ -129,12 +130,11 @@ parameter_defaults:
   NeutronDhcpAgentsPerNetwork: 2
   NeutronWorkers: 3
 
-  DockerNamespace: 172.19.0.2:8787/dprince
-  DockerNamespaceIsRegistry: true
+  #DockerNamespace: 172.19.0.2:8787/dprince
+  #DockerNamespaceIsRegistry: true
 EOF_CAT
 
 cat > /root/run.sh <<-EOF_CAT
-
 # swap in your local IP here
 openstack undercloud deploy --templates=/root/tripleo-heat-templates \
 --local-ip=172.19.0.3 \
@@ -147,6 +147,7 @@ EOF_CAT
 
 #bash /root/run.sh
 
+# these are custom settings for dprince's baremetal setup
 #cat >> /etc/ironic/ironic.conf <<-EOF_CAT
 #[iboot]
 #max_retry=10
@@ -154,7 +155,7 @@ EOF_CAT
 #reboot_delay=8
 #EOF_CAT
 
-# Redirect console for AMT ttyS1
+# Redirect console for AMT ttyS1 (dprince uses amtterm this way)
 #sed -e 's|text|text console=ttyS1,115200|' -i /usr/lib/python2.7/site-packages/ironic/drivers/modules/ipxe_config.template
 
 #systemctl restart openstack-ironic-api
