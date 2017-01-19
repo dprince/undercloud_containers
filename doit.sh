@@ -167,6 +167,6 @@ chmod 755 $HOME/run.sh
 echo git config --global user.email "you@example.com"
 echo git config --global user.name "Your Name"
 
-echo "You will want to add 'OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml' to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic."
+echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
 
 
