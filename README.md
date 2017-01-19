@@ -2,7 +2,7 @@
 
 doit.sh: The main script which sets up a centos 7 machine with all the bits necessary to run the containerized undercloud.
 
-cleanup.sh: Cleans up git repos so you can do a fresh checkout of everything.  Should be able to run doit.sh again after running this.
+cleanup.sh: Cleans up git repos so you can do a fresh checkout of everything.  Should be able to run doit.sh again after running this.  **Make sure you don't have any local changes because this will delete them!**
 
 dprince.sh: If you're dprince you'll looooooove it!
 
