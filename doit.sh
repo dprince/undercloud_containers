@@ -1,22 +1,7 @@
 #!/usr/bin/env bash
-set -ux
-
-virsh destroy seed
-
-# call into scripts from tripleo-incubator (add these to your $PATH)
-cleanup-env 
-setup-seed-vm -a amd64 -m 12388608 -c 6
-sudo cp instack.qcow2 /var/lib/libvirt/images/seed.qcow2
-virsh start seed
-sleep 15
-
-SEED_IP=$(sudo cat /var/lib/libvirt/dnsmasq/virbr0.status | grep ip-address | tail -n 1 | sed -e "s|.*ip-address\": \"\([^\"]*\).*|\1|")
-
-ssh root@${SEED_IP} <<-EOF
+set -eux
 
 setenforce permissive
-
-set -eux
 
 pushd /etc/yum.repos.d/
 rm delorean.repo
@@ -30,9 +15,6 @@ wget http://trunk.rdoproject.org/centos7/current/delorean.repo
 yum install -y epel-release openvswitch
 
 yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
-
-git config --global user.email "you@example.com"
-git config --global user.name "Your Name"
 
 popd
 
@@ -136,7 +118,7 @@ EOF_CAT
 
 cat > /root/run.sh <<-EOF_CAT
 # swap in your local IP here
-openstack undercloud deploy --templates=/root/tripleo-heat-templates \
+sudo openstack undercloud deploy --templates=/root/tripleo-heat-templates \
 --local-ip=172.19.0.3 \
 -e /root/tripleo-heat-templates/environments/services/ironic.yaml \
 -e /root/tripleo-heat-templates/environments/services/mistral.yaml \
@@ -161,30 +143,6 @@ EOF_CAT
 #systemctl restart openstack-ironic-api
 #systemctl restart openstack-ironic-conductor
 
-EOF
-exit 0
+echo git config --global user.email "you@example.com"
+echo git config --global user.name "Your Name"
 
-source stackrc
-
-scp ironic-python-agent.initramfs root@$SEED_IP:/httpboot/agent.ramdisk
-scp ironic-python-agent.kernel root@$SEED_IP:/httpboot/agent.kernel
-
-OS_IMAGE_API_VERSION=1 openstack overcloud image upload #loads deploy kernel and ramdisk
-openstack baremetal import --json ~/testenv.json
-
-for X in $(ironic node-list | grep 'None' | cut -d ' ' -f 2); do
-  ironic node-update $X add driver_info/deploy_forces_oob_reboot=True
-done
-#ironic node-update optiplex add driver_info/deploy_forces_oob_reboot=True
-
-#OS_IMAGE_API_VERSION=2 load-image -d overcloud-full.qcow2
-openstack baremetal configure boot
-
-#glance image-create --name centos-atomic --file CentOS-Atomic-Host-7.1.2-GenericCloud.qcow2 --disk-format qcow2 --container-format bare
-
-bash flavors.sh
-
-nova keypair-add --pub-key ~/.ssh/id_rsa.pub default
-
-#openstack baremetal introspection bulk start
-bash ~/puppet.sh
