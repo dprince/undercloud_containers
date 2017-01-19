@@ -70,6 +70,45 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 #git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/22 && git cherry-pick FETCH_HEAD
 sed -e '/.*MySQL/d' -i $HOME/tripleo-heat-templates/environments/docker.yaml
 
+# Only run containerized roles for now to make it faster (and probably make it work..).
+cat > roles_data_undercloud.yaml <<-EOF_CAT
+- name: Undercloud # the 'primary' role goes first
+  CountDefault: 1
+  disable_constraints: True
+  ServicesDefault:
+    - OS::TripleO::Services::Ntp
+    - OS::TripleO::Services::MySQL
+    #- OS::TripleO::Services::MongoDb
+    - OS::TripleO::Services::Keystone
+    - OS::TripleO::Services::Apache
+    - OS::TripleO::Services::RabbitMQ
+    - OS::TripleO::Services::GlanceApi
+    #- OS::TripleO::Services::SwiftProxy
+    #- OS::TripleO::Services::SwiftStorage
+    #- OS::TripleO::Services::SwiftRingBuilder
+    - OS::TripleO::Services::Memcached
+    - OS::TripleO::Services::HeatApi
+    - OS::TripleO::Services::HeatApiCfn
+    - OS::TripleO::Services::HeatEngine
+    - OS::TripleO::Services::NovaApi
+    #- OS::TripleO::Services::NovaPlacement
+    - OS::TripleO::Services::NovaMetadata
+    - OS::TripleO::Services::NovaScheduler
+    - OS::TripleO::Services::NovaConductor
+    #- OS::TripleO::Services::MistralEngine
+    #- OS::TripleO::Services::MistralApi
+    #- OS::TripleO::Services::MistralExecutor
+    - OS::TripleO::Services::IronicApi
+    - OS::TripleO::Services::IronicConductor
+    - OS::TripleO::Services::NovaIronic
+    #- OS::TripleO::Services::Zaqar
+    #- OS::TripleO::Services::NeutronServer
+    #- OS::TripleO::Services::NeutronApi
+    #- OS::TripleO::Services::NeutronCorePlugin
+    #- OS::TripleO::Services::NeutronOvsAgent
+    #- OS::TripleO::Services::NeutronDhcpAgent
+EOF_CAT
+
 # TRIPLEO_CLIENT
 cd
 git clone git://git.openstack.org/openstack/python-tripleoclient
@@ -86,6 +125,7 @@ git fetch https://git.openstack.org/openstack/heat-agents refs/changes/23/420723
 
 sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-config/hooks/json-file
 sudo cp heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
+cd
 
 #cd /etc/puppet/modules
 #rm -f mysql
@@ -122,8 +162,11 @@ sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/custom.yaml
 EOF_CAT
 
-chmod 755 run.sh
+chmod 755 $HOME/run.sh
 
 echo git config --global user.email "you@example.com"
 echo git config --global user.name "Your Name"
+
+echo "You will want to add 'OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml' to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic."
+
 
