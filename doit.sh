@@ -3,26 +3,26 @@ set -x
 
 sudo setenforce permissive
 
-pushd /etc/yum.repos.d/
-sudo rm delorean.repo
-sudo rm delorean-deps.repo
-
-sudo yum -y install wget vim-enhanced
+sudo yum -y install wget vim-enhanced epel-release
+sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 pushd /etc/yum.repos.d/
 sudo wget http://trunk.rdoproject.org/centos7/delorean-deps.repo
 sudo sed -i -e 's|priority=.*|priority=30|' /etc/yum.repos.d/delorean-deps.repo
 sudo wget http://trunk.rdoproject.org/centos7/current/delorean.repo
-sudo yum install -y epel-release openvswitch
 
-sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
+# these avoid warning for the cherry-picks below ATM
+git config --global user.email "theboss@foo.bar"
+git config --global user.name "TheBoss"
 
 popd
 
-sudo yum install -y openstack-heat-api openstack-heat-engine python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient bridge-utils openstack-ceilometer-api python-heat-agent-docker-cmd openstack-ironic-staging-drivers docker
+sudo yum install -y openstack-heat-api openstack-heat-engine python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient bridge-utils openstack-ceilometer-api python-heat-agent-docker-cmd openstack-ironic-staging-drivers docker openvswitch
 cd
 
 sudo systemctl start openvswitch
-echo "INSECURE_REGISTRY='--insecure-registry 172.19.0.2:8787'" | sudo tee /etc/sysconfig/docker
+if [ -n "$LOCAL_REGISTRY" ]; then
+  echo "INSECURE_REGISTRY='--insecure-registry $LOCAL_REGISTRY'" | sudo tee /etc/sysconfig/docker
+fi
 sudo systemctl start docker
 
 sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
@@ -66,7 +66,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/40 && git cherry-pick FETCH_HEAD
 
-# MySQL NOT WORKING YET!
+# MySQL NOT WORKING YET! Fails to to permission issues
 #git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/22 && git cherry-pick FETCH_HEAD
 sed -e '/.*MySQL/d' -i $HOME/tripleo-heat-templates/environments/docker.yaml
 
@@ -140,21 +140,31 @@ parameter_defaults:
   AdminPassword: HnTzjCGP6HyXmWs9FzrdHRxMs
 EOF_CAT
 
+# Custom settings can go here
 cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
-  UndercloudDhcpRangeStart: 172.19.0.4
-  UndercloudDhcpRangeEnd: 172.19.0.20
-  UndercloudNetworkCidr: 172.19.0.0/24
-  UndercloudNetworkGateway: 172.19.0.1
   UndercloudNameserver: 8.8.8.8
 EOF_CAT
 
-MYIP=`ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`
-echo $MY_IP
+LOCAL_IP=${LOCAL_IP:-`ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
+
+# run this to cleanup containers between iterations
+cat > $HOME/cleanup.sh <<-EOF_CAT
+#!/usr/bin/env bash
+set -x
+
+sudo docker ps -qa | xargs sudo docker rm -f
+echo 'drop database keystone;' | sudo mysql -u root
+echo 'drop database glance;' | sudo mysql -u root
+echo 'drop database heat;' | sudo mysql -u root
+echo 'drop database nova;' | sudo mysql -u root
+echo 'drop database nova_api;' | sudo mysql -u root
+echo 'drop database nova_api_cell0;' | sudo mysql -u root
+EOF_CAT
 
 cat > $HOME/run.sh <<-EOF_CAT
 sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
---local-ip=$MYIP \
+--local-ip=$LOCAL_IP \
 -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml \
@@ -164,9 +174,4 @@ EOF_CAT
 
 chmod 755 $HOME/run.sh
 
-echo git config --global user.email "you@example.com"
-echo git config --global user.name "Your Name"
-
 echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
-
-

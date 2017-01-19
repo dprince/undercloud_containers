@@ -1,9 +1,8 @@
-# undercloud_containers
+# undercloud\_containers
 
 This set of scripts sets up and maintains (kinda) a containerized undercloud.  Most of the work is done by doit.sh which downloads all the repositories necessary with all the patches and software needed to make it work.  It also creates a ~/run.sh script which you can use to kick off the undercloud.  This script can be run as a user or as root.
 
 doit.sh expects to be run on a centos 7 machine.
-
 
 * doit.sh: The main script which sets up all the bits necessary to run the containerized undercloud.
 
@@ -11,8 +10,6 @@ doit.sh expects to be run on a centos 7 machine.
 
 * dprince.sh: If you're dprince you'll looooooove it!
 
-* test.sh: Things to run afterwards to see if it's working.
+* post\_intall.sh: Things to run after installation to setup a working undercloud.
 
-* vm_doit.sh: This sets up a VM and then runs the doit.sh script on it.
-
-* iteration_cleanup.sh: Cleans up between runs of openstack undercloud deploy (typically run via ~/run.sh).
+* vm\_doit.sh: This sets up a VM and then runs the doit.sh script on it. Currently requires some setup scripts from tripleo-incubator, etc.
