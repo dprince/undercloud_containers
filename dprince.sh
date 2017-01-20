@@ -12,6 +12,7 @@ parameter_defaults:
   #IronicAutomatedCleaning: false
   NeutronDhcpAgentsPerNetwork: 2
   NeutronWorkers: 3
+  NeutronServicePlugins: ""
 
   DockerNamespace: 172.19.0.2:8787/dprince
   DockerNamespaceIsRegistry: true

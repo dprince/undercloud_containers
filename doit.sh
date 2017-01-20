@@ -35,20 +35,14 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
-#Add deployed server bootstrap to noop-ctlplane
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/86/421586/1 && git cherry-pick FETCH_HEAD
-
 # docker: eliminate copy-json.py in favor of json-file
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/416420/15 && git cherry-pick FETCH_HEAD
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/22 && git cherry-pick FETCH_HEAD
-
-# revert cells DB revert
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/421999/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/26 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/2 && git cherry-pick FETCH_HEAD
 
 # Add Rabbit to the endpoint map
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/8 && git cherry-pick FETCH_HEAD
@@ -63,10 +57,13 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/1 && git cherry-pick FETCH_HEAD
 
 # Keystone
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/23 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/24 && git cherry-pick FETCH_HEAD
 
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/40 && git cherry-pick FETCH_HEAD
+
+# Neutron
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/2 && git cherry-pick FETCH_HEAD
 
 # MySQL NOT WORKING YET! Fails to to permission issues
 #git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/22 && git cherry-pick FETCH_HEAD
@@ -104,11 +101,10 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::IronicConductor
     - OS::TripleO::Services::NovaIronic
     #- OS::TripleO::Services::Zaqar
-    #- OS::TripleO::Services::NeutronServer
-    #- OS::TripleO::Services::NeutronApi
-    #- OS::TripleO::Services::NeutronCorePlugin
-    #- OS::TripleO::Services::NeutronOvsAgent
-    #- OS::TripleO::Services::NeutronDhcpAgent
+    - OS::TripleO::Services::NeutronApi
+    - OS::TripleO::Services::NeutronCorePlugin
+    - OS::TripleO::Services::NeutronOvsAgent
+    - OS::TripleO::Services::NeutronDhcpAgent
 EOF_CAT
 
 # TRIPLEO_CLIENT
@@ -129,7 +125,14 @@ sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-conf
 sudo cp heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
 cd
 
-#cd /etc/puppet/modules
+cd /etc/puppet/modules
+rm -f tripleo
+git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
+cd tripleo
+git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/30/209030/6 && git cherry-pick FETCH_HEAD
+rm -Rf /etc/puppet/modules/tripleo/lib/puppet/provider/mysql_*
+cd
+
 #rm -f mysql
 #git clone https://github.com/dprince/puppetlabs-mysql.git mysql
 #cd mysql
@@ -146,6 +149,7 @@ EOF_CAT
 cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
   UndercloudNameserver: 8.8.8.8
+  NeutronServicePlugins: ""
 EOF_CAT
 
 LOCAL_IP=${LOCAL_IP:-`ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
@@ -162,6 +166,7 @@ echo 'drop database heat;' | sudo mysql -u root
 echo 'drop database nova;' | sudo mysql -u root
 echo 'drop database nova_api;' | sudo mysql -u root
 echo 'drop database nova_api_cell0;' | sudo mysql -u root
+echo 'drop database ovs_neutron;' | sudo mysql -u root
 EOF_CAT
 
 cat > $HOME/run.sh <<-EOF_CAT
