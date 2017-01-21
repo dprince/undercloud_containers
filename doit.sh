@@ -57,7 +57,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/1 && git cherry-pick FETCH_HEAD
 
 # Keystone
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/24 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/25 && git cherry-pick FETCH_HEAD
 
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/40 && git cherry-pick FETCH_HEAD
@@ -66,7 +66,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/2 && git cherry-pick FETCH_HEAD
 
 # MySQL NOT WORKING YET! Fails to to permission issues
-#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/22 && git cherry-pick FETCH_HEAD
+# git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/24 && git cherry-pick FETCH_HEAD
 sed -e '/.*MySQL/d' -i $HOME/tripleo-heat-templates/environments/docker.yaml
 
 # Only run containerized roles for now to make it faster (and probably make it work..).
@@ -125,19 +125,13 @@ sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-conf
 sudo cp heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
 cd
 
+# Cherry-pick custom noop_resource function from puppet-tripleo
 cd /etc/puppet/modules
 rm -f tripleo
 git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
 cd tripleo
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/30/209030/6 && git cherry-pick FETCH_HEAD
-rm -Rf /etc/puppet/modules/tripleo/lib/puppet/provider/mysql_*
+git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/71/423571/1 && git cherry-pick FETCH_HEAD
 cd
-
-#rm -f mysql
-#git clone https://github.com/dprince/puppetlabs-mysql.git mysql
-#cd mysql
-#git checkout -b noop_providers remotes/origin/noop_providers
-#cd
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
