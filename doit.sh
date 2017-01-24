@@ -39,10 +39,10 @@ cd tripleo-heat-templates
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/416420/15 && git cherry-pick FETCH_HEAD
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/27 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/29 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/2 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/3 && git cherry-pick FETCH_HEAD
 
 # Add Rabbit to the endpoint map
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/8 && git cherry-pick FETCH_HEAD
@@ -54,7 +54,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/17 && git cherry-pick FETCH_HEAD
 
 # Ironic
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/2 && git cherry-pick FETCH_HEAD
 
 # Keystone
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/26 && git cherry-pick FETCH_HEAD
@@ -63,7 +63,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/40 && git cherry-pick FETCH_HEAD
 
 # Neutron
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/2 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/3 && git cherry-pick FETCH_HEAD
 
 # Mysql
 # NOTE: this works but currently requires https://review.openstack.org/#/c/423868/
@@ -99,6 +99,7 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     #- OS::TripleO::Services::MistralExecutor
     - OS::TripleO::Services::IronicApi
     - OS::TripleO::Services::IronicConductor
+    - OS::TripleO::Services::IronicPxe
     - OS::TripleO::Services::NovaIronic
     #- OS::TripleO::Services::Zaqar
     - OS::TripleO::Services::NeutronApi
