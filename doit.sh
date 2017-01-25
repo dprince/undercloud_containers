@@ -13,6 +13,8 @@ sudo wget http://trunk.rdoproject.org/centos7/delorean-deps.repo
 sudo sed -i -e 's|priority=.*|priority=30|' /etc/yum.repos.d/delorean-deps.repo
 sudo wget http://trunk.rdoproject.org/centos7/current/delorean.repo
 
+sudo yum -y update
+
 # these avoid warning for the cherry-picks below ATM
 if [ ! -f $HOME/.gitconfig ]; then
   git config --global user.email "theboss@foo.bar"
