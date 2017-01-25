@@ -3,16 +3,19 @@ set -x
 
 sudo setenforce permissive
 
-# Make sure we get all new stuff.  I was having an issue with yum caching.
-sudo yum clean all
+# Make sure we get all new stuff.
+sudo yum -y update
 
-sudo yum -y install wget vim-enhanced epel-release
+# Workaround https://bugs.launchpad.net/tripleo-quickstart/+bug/1658030
+sudo yum -y reinstall python-heat-agent
+
+sudo yum -y install curl vim-enhanced epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
-pushd /etc/yum.repos.d/
-sudo wget http://trunk.rdoproject.org/centos7/delorean-deps.repo
+sudo curl -L -o /etc/yum.repos.d/delorean-deps.repo  http://trunk.rdoproject.org/centos7/delorean-deps.repo
 sudo sed -i -e 's|priority=.*|priority=30|' /etc/yum.repos.d/delorean-deps.repo
-sudo wget http://trunk.rdoproject.org/centos7/current/delorean.repo
+sudo curl -L -o /etc/yum.repos.d/delorean.repo http://trunk.rdoproject.org/centos7/current/delorean.repo
 
+# Get the list of packages from the new repos
 sudo yum -y update
 
 # these avoid warning for the cherry-picks below ATM
@@ -21,10 +24,9 @@ if [ ! -f $HOME/.gitconfig ]; then
   git config --global user.name "TheBoss"
 fi
 
-popd
-
 sudo yum install -y openstack-heat-api openstack-heat-engine python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient bridge-utils openstack-ceilometer-api python-heat-agent-docker-cmd openstack-ironic-staging-drivers docker openvswitch
-cd
+
+cd $HOME
 
 sudo systemctl start openvswitch
 if [ -n "$LOCAL_REGISTRY" ]; then
