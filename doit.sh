@@ -6,6 +6,7 @@ sudo setenforce permissive
 # Make sure we get all new stuff.  I was having an issue with yum caching.
 sudo yum clean all
 
+sudo rm -f /etc/yum.repos.d/delorean*
 sudo yum -y install wget vim-enhanced epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 pushd /etc/yum.repos.d/
