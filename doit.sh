@@ -6,6 +6,11 @@ sudo setenforce permissive
 # Make sure we get all new stuff.  I was having an issue with yum caching.
 sudo yum clean all
 
+# Workaround https://bugs.launchpad.net/tripleo-quickstart/+bug/1658030
+if [ ! -f /usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config ]; then
+  sudo yum -y reinstall python-heat-agent
+fi
+
 sudo yum -y install curl vim-enhanced epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 sudo curl -L -o /etc/yum.repos.d/delorean-deps.repo  http://trunk.rdoproject.org/centos7/delorean-deps.repo
