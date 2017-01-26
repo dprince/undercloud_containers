@@ -14,6 +14,9 @@ cat > template_overrides.j2 <<-EOF_CAT
 {% set base_centos_binary_packages_append = ['puppet'] %}
 {% set nova_scheduler_packages_append = ['openstack-tripleo-common'] %}
 
+# Required for mistral-db-populate to load tripleo custom actions
+{% set mistral_api_packages_append = ['openstack-tripleo-common'] %}
+
 # FIXME (kolla review to add ceilometer to swift proxy image)
 {% set swift_proxy_server_packages_append = ['openstack-ceilometer-common'] %}
 EOF_CAT

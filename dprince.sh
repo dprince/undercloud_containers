@@ -14,7 +14,7 @@ parameter_defaults:
   NeutronWorkers: 3
   NeutronServicePlugins: ""
 
-  DockerNamespace: 172.19.0.2:8787/dprince
+  DockerNamespace: 172.19.0.2:8787/tripleo
   DockerNamespaceIsRegistry: true
 EOF_CAT
 
@@ -28,7 +28,7 @@ docker run -ti \
 --volume /var/lib/config-data/mysql/root:/root/:ro \
 --volume /etc/hosts:/etc/hosts:ro \
 --volume mariadb:/var/lib/mysql/ \
-172.19.0.2:8787/dprince/centos-binary-mariadb /bin/bash
+172.19.0.2:8787/tripleo/centos-binary-mariadb /bin/bash
 EOF_CAT
 
 #FIXME these settings are for baremetal and need to be migrated

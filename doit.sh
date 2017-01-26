@@ -44,41 +44,43 @@ git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # docker: eliminate copy-json.py in favor of json-file
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/416420/15 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/416420/17 && git cherry-pick FETCH_HEAD
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/29 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/31 && git cherry-pick FETCH_HEAD
 
-# Add option to diff containers after config stage.
+# Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/3 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/6 && git cherry-pick FETCH_HEAD
 
 # Add Rabbit to the endpoint map
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/8 && git cherry-pick FETCH_HEAD
 
 # Nova
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/9 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/13 && git cherry-pick FETCH_HEAD
 
 # Heat
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/17 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/19 && git cherry-pick FETCH_HEAD
 
 # Ironic
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/2 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/4 && git cherry-pick FETCH_HEAD
 
 # Keystone
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/26 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/28 && git cherry-pick FETCH_HEAD
 
 # Glance
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/40 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/42 && git cherry-pick FETCH_HEAD
 
 # Neutron
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/3 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/5 && git cherry-pick FETCH_HEAD
+
+# Mistral
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/44/425744/2 && git cherry-pick FETCH_HEAD
 
 # Mysql
-# NOTE: this works but currently requires https://review.openstack.org/#/c/423868/
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/25 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/27 && git cherry-pick FETCH_HEAD
 
 # Only run containerized roles for now to make it faster (and probably make it work..).
 cat > roles_data_undercloud.yaml <<-EOF_CAT
@@ -105,9 +107,9 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::NovaMetadata
     - OS::TripleO::Services::NovaScheduler
     - OS::TripleO::Services::NovaConductor
-    #- OS::TripleO::Services::MistralEngine
-    #- OS::TripleO::Services::MistralApi
-    #- OS::TripleO::Services::MistralExecutor
+    - OS::TripleO::Services::MistralEngine
+    - OS::TripleO::Services::MistralApi
+    - OS::TripleO::Services::MistralExecutor
     - OS::TripleO::Services::IronicApi
     - OS::TripleO::Services::IronicConductor
     - OS::TripleO::Services::IronicPxe
