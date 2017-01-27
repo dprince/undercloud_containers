@@ -53,10 +53,10 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/6 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/7 && git cherry-pick FETCH_HEAD
 
 # Add Rabbit to the endpoint map
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/8 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/11 && git cherry-pick FETCH_HEAD
 
 # Nova
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/13 && git cherry-pick FETCH_HEAD
@@ -82,23 +82,26 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # Mysql
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/27 && git cherry-pick FETCH_HEAD
 
+# Zaqar
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/76/425976/2 && git cherry-pick FETCH_HEAD
+
 # Only run containerized roles for now to make it faster (and probably make it work..).
 cat > roles_data_undercloud.yaml <<-EOF_CAT
 - name: Undercloud # the 'primary' role goes first
   CountDefault: 1
   disable_constraints: True
   ServicesDefault:
-    - OS::TripleO::Services::Ntp
+    - OS::TripleO::Services::Ntp #baremetal
     - OS::TripleO::Services::MySQL
-    #- OS::TripleO::Services::MongoDb
+    - OS::TripleO::Services::MongoDb #baremetal
     - OS::TripleO::Services::Keystone
     - OS::TripleO::Services::Apache
-    - OS::TripleO::Services::RabbitMQ
+    - OS::TripleO::Services::RabbitMQ #baremetal
     - OS::TripleO::Services::GlanceApi
     #- OS::TripleO::Services::SwiftProxy
     #- OS::TripleO::Services::SwiftStorage
     #- OS::TripleO::Services::SwiftRingBuilder
-    - OS::TripleO::Services::Memcached
+    - OS::TripleO::Services::Memcached #baremetal
     - OS::TripleO::Services::HeatApi
     - OS::TripleO::Services::HeatApiCfn
     - OS::TripleO::Services::HeatEngine
@@ -114,7 +117,7 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::IronicConductor
     - OS::TripleO::Services::IronicPxe
     - OS::TripleO::Services::NovaIronic
-    #- OS::TripleO::Services::Zaqar
+    - OS::TripleO::Services::Zaqar
     - OS::TripleO::Services::NeutronApi
     - OS::TripleO::Services::NeutronCorePlugin
     - OS::TripleO::Services::NeutronOvsAgent
