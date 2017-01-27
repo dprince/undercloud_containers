@@ -117,7 +117,7 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::IronicConductor
     - OS::TripleO::Services::IronicPxe
     - OS::TripleO::Services::NovaIronic
-    - OS::TripleO::Services::Zaqar
+    #- OS::TripleO::Services::Zaqar
     - OS::TripleO::Services::NeutronApi
     - OS::TripleO::Services::NeutronCorePlugin
     - OS::TripleO::Services::NeutronOvsAgent
