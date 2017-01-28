@@ -117,7 +117,7 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::IronicConductor
     - OS::TripleO::Services::IronicPxe
     - OS::TripleO::Services::NovaIronic
-    #- OS::TripleO::Services::Zaqar
+    - OS::TripleO::Services::Zaqar
     - OS::TripleO::Services::NeutronApi
     - OS::TripleO::Services::NeutronCorePlugin
     - OS::TripleO::Services::NeutronOvsAgent
@@ -128,7 +128,7 @@ EOF_CAT
 cd
 git clone git://git.openstack.org/openstack/python-tripleoclient
 cd python-tripleoclient/
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/18 && git checkout FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/22 && git checkout FETCH_HEAD
 sudo python setup.py install
 
 cd
