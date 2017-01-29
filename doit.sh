@@ -186,6 +186,7 @@ sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
+-e $HOME/tripleo-heat-templates/environments/mongodb-nojournal.yaml \
 -e $HOME/custom.yaml
 EOF_CAT
 
