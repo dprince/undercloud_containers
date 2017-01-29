@@ -56,7 +56,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/7 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/8 && git cherry-pick FETCH_HEAD
 
 # Add Rabbit to the endpoint map
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/11 && git cherry-pick FETCH_HEAD
@@ -88,6 +88,9 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # Zaqar
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/76/425976/2 && git cherry-pick FETCH_HEAD
 
+# Rabbitmq
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/426612/1 && git cherry-pick FETCH_HEAD
+
 # Only run containerized roles for now to make it faster (and probably make it work..).
 cat > roles_data_undercloud.yaml <<-EOF_CAT
 - name: Undercloud # the 'primary' role goes first
@@ -99,7 +102,7 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::MongoDb #baremetal
     - OS::TripleO::Services::Keystone
     - OS::TripleO::Services::Apache
-    - OS::TripleO::Services::RabbitMQ #baremetal
+    - OS::TripleO::Services::RabbitMQ
     - OS::TripleO::Services::GlanceApi
     #- OS::TripleO::Services::SwiftProxy
     #- OS::TripleO::Services::SwiftStorage
@@ -183,7 +186,7 @@ tripleoupstream/centos-binary-mariadb:latest /bin/bash
 EOF_CAT
 
 cat > $HOME/run.sh <<-EOF_CAT
-sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
+time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
 -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
