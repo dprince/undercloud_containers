@@ -134,7 +134,10 @@ EOF_CAT
 cd
 git clone git://git.openstack.org/openstack/python-tripleoclient
 cd python-tripleoclient/
+# Deploy the undercloud with Heat
 git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/22 && git checkout FETCH_HEAD
+# Add `--keep-running` flag to undercloud deploy
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/90/414490/1 && git cherry-pick FETCH_HEAD
 sudo python setup.py install
 
 cd
@@ -188,6 +191,7 @@ EOF_CAT
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
+--keep-running \
 -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml \
