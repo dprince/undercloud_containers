@@ -174,6 +174,7 @@ set -x
 sudo docker ps -qa | xargs sudo docker rm -f
 sudo docker volume ls -q | xargs sudo docker volume rm
 EOF_CAT
+chmod 755 $HOME/cleanup.sh
 
 # use this guy to run ad-hoc mysql queries for troubleshooting
 cat > $HOME/mysql_helper.sh <<-EOF_CAT
@@ -187,6 +188,7 @@ docker run -ti \
 --volume mariadb:/var/lib/mysql/ \
 tripleoupstream/centos-binary-mariadb:latest /bin/bash
 EOF_CAT
+chmod 755 $HOME/mysql_helper.sh
 
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
@@ -199,7 +201,6 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/mongodb-nojournal.yaml \
 -e $HOME/custom.yaml
 EOF_CAT
-
 chmod 755 $HOME/run.sh
 
 echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
