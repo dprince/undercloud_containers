@@ -141,8 +141,8 @@ cd
 git clone git://git.openstack.org/openstack/heat-agents
 cd heat-agents
 
-# Implement container_step_config for containers
-git fetch https://git.openstack.org/openstack/heat-agents refs/changes/23/420723/7 && git cherry-pick FETCH_HEAD
+# delete existing containers with the same name
+git fetch https://git.openstack.org/openstack/heat-agents refs/changes/33/426633/1 && git cherry-pick FETCH_HEAD
 
 sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-config/hooks/json-file
 sudo cp heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
