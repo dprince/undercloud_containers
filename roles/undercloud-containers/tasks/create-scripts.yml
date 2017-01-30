@@ -1,0 +1,13 @@
+# Creat the scripts that will be used to deploy the undercloud
+# environment.
+- name: Create undercloud install script
+  synchronize:
+    src: files/{{ item }}
+    dest: "{{ working_dir }}/"
+    use_ssh_args: true
+  with_items:
+    - cleanup.sh
+    - doit.sh
+    - dprince.sh
+    - post_install.sh
+

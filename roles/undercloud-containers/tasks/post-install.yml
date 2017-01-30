@@ -1,0 +1,19 @@
+# Extract the undercloud admin password from
+# `undercloud-passwords.conf`.
+- name: Get the undercloud stackrc
+  copy:
+    remote_src: true
+    src: /root/stackrc
+    dest: "{{ working_dir }}/stackrc"
+    owner: "{{ undercloud_user }}"
+    group: "{{ undercloud_user }}"
+    mode: 0755
+  become: true
+
+- name: Copy stackrc to ansible host
+  tags:
+    - undercloud-post-install
+  fetch:
+    flat: true
+    src: stackrc
+    dest: "{{ local_working_dir }}/stackrc"

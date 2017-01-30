@@ -1,0 +1,4 @@
+---
+undercloud_post_install_log: "{{ working_dir }}/undercloud_post_install.log"
+undercloud_setup_install_log: "{{ working_dir }}/doit.log"
+undercloud_install_log: "{{ working_dir }}/run.log"
