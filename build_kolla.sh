@@ -5,9 +5,19 @@ REGISTRY=${REGISTRY:?"Please specify a registry"}
 NAMESPACE=${NAMESPACE:-"tripleo"}
 TAG=${TAG:-"latest"}
 
+sudo yum install -y python-virtualenv gcc
+
 cd
-git clone https://github.com/openstack/kolla.git
+if [ ! -d kolla ]; then
+  git clone https://github.com/openstack/kolla.git
+fi
 cd kolla
+git checkout master
+git pull origin master
+virtualenv ~/kolla-venv
+source ~/kolla-venv/bin/activate
+pip install -U pip
+pip install -r requirements.txt
 
 cat > template_overrides.j2 <<-EOF_CAT
 {% extends parent_template %}
@@ -27,4 +37,13 @@ cat >> template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
-./kolla-build --base centos --template-override template-overrides.j2 --registry "$REGISTRY" --namespace "$NAMESPACE" --push --tag "$TAG"
+./tools/build.py \
+  --base centos \
+  --type binary \
+  --namespace "$NAMESPACE" \
+  --registry "$REGISTRY" \
+  --tag "$TAG" \
+  --push \
+  --template-override template-overrides.j2
+cd
+deactivate
