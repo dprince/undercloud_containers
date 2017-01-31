@@ -44,6 +44,7 @@ fi
   --registry "$REGISTRY" \
   --tag "$TAG" \
   --push \
-  --template-override template-overrides.j2
+  --template-override template_overrides.j2 \
+  $@
 cd
 deactivate
