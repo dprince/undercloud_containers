@@ -29,6 +29,19 @@ cat > template_overrides.j2 <<-EOF_CAT
 
 # FIXME (kolla review to add ceilometer to swift proxy image)
 {% set swift_proxy_server_packages_append = ['openstack-ceilometer-common'] %}
+
+# Fix missing directories in mariadb image
+{% block mariadb_footer %}
+RUN mkdir -p /var/lib/mysql && \
+  chmod 755 /var/lib/mysql && \
+  chown mysql.mysql /var/lib/mysql && \
+  mkdir -p /var/log/mariadb && \
+  chmod 750 /var/log/mariadb && \
+  chown mysql.mysql /var/log/mariadb && \
+  mkdir -p /var/run/mariadb && \
+  chmod 755 /var/run/mariadb && \
+  chown mysql.mysql /var/run/mariadb
+{% endblock %}
 EOF_CAT
 
 if [ "$USER" == 'dprince' ]; then
