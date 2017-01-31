@@ -164,7 +164,7 @@ parameter_defaults:
   NeutronServicePlugins: ""
 EOF_CAT
 
-LOCAL_IP=${LOCAL_IP:-`ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
+LOCAL_IP=${LOCAL_IP:-`/usr/sbin/ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
 
 # run this to cleanup containers and volumes between iterations
 cat > $HOME/cleanup.sh <<-EOF_CAT

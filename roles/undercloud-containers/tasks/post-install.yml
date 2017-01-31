@@ -1,0 +1,21 @@
+# Extract the undercloud admin password from
+# `undercloud-passwords.conf`.
+- name: Get undercloud admin password
+  command: >
+    awk -F= '$1 == "undercloud_admin_password" {print $2}'
+    {{ working_dir }}/undercloud-passwords.conf
+  register: undercloud_admin_password
+  changed_when: false
+
+- name: Copy stackrc to ansible host
+  tags:
+    - undercloud-post-install
+  fetch:
+    flat: true
+    src: stackrc
+    dest: "{{ local_working_dir }}/stackrc"
+
+- name: Execute post install for the undercloud
+  shell: |
+    {{ working_dir }}/post-install.sh > \
+    {{ undercloud_post_install.log }} 2>&1
