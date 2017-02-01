@@ -30,6 +30,20 @@ docker run -ti \
 --volume mariadb:/var/lib/mysql/ \
 172.19.0.2:8787/tripleo/centos-binary-mariadb /bin/bash
 EOF_CAT
+chmod 755 $HOME/mysql_helper.sh
+
+cat > $HOME/run.sh <<-EOF_CAT
+time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
+--local-ip=$LOCAL_IP \
+--heat-container-image=172.19.0.2:8787/tripleo/centos-binary-heat-engine \
+-e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
+-e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
+-e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml \
+-e $HOME/tripleo-heat-templates/environments/docker.yaml \
+-e $HOME/tripleo-heat-templates/environments/mongodb-nojournal.yaml \
+-e $HOME/custom.yaml
+EOF_CAT
+chmod 755 $HOME/run.sh
 
 #FIXME these settings are for baremetal and need to be migrated
 # into containers for dprince

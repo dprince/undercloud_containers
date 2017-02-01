@@ -11,7 +11,7 @@ if [ ! -f /usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config
   sudo yum -y reinstall python-heat-agent
 fi
 
-sudo yum -y install curl vim-enhanced epel-release
+sudo yum -y install curl vim-enhanced telnet epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 sudo curl -L -o /etc/yum.repos.d/delorean-deps.repo  http://trunk.rdoproject.org/centos7/delorean-deps.repo
 sudo sed -i -e 's|priority=.*|priority=30|' /etc/yum.repos.d/delorean-deps.repo
@@ -26,7 +26,7 @@ if [ ! -f $HOME/.gitconfig ]; then
 fi
 
 
-sudo yum install -y openstack-heat-api openstack-heat-engine python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient bridge-utils openstack-ceilometer-api python-heat-agent-docker-cmd openstack-ironic-staging-drivers docker openvswitch
+sudo yum install -y python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient python-heat-agent-docker-cmd docker openvswitch
 cd
 
 sudo systemctl start openvswitch
@@ -134,8 +134,16 @@ EOF_CAT
 cd
 git clone git://git.openstack.org/openstack/python-tripleoclient
 cd python-tripleoclient/
+
+# Add heat_launcher module to help launch heat-all
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/30/427530/1 && git cherry-pick FETCH_HEAD
+
+# Add fake_keystone
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/31/427531/1 && git cherry-pick FETCH_HEAD
+
 # Deploy the undercloud with Heat
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/22 && git checkout FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/23 && git checkout FETCH_HEAD
+
 # Add `--keep-running` flag to undercloud deploy
 git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/90/414490/1 && git cherry-pick FETCH_HEAD
 sudo python setup.py install
