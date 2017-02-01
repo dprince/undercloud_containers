@@ -43,9 +43,6 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
-# docker: eliminate copy-json.py in favor of json-file
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/416420/18 && git cherry-pick FETCH_HEAD
-
 # docker: new hybrid deployment architecture and configuration
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/33 && git cherry-pick FETCH_HEAD
 
@@ -83,7 +80,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/44/425744/2 && git cherry-pick FETCH_HEAD
 
 # Mysql
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/28 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/29 && git cherry-pick FETCH_HEAD
 
 # Zaqar
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/76/425976/2 && git cherry-pick FETCH_HEAD
