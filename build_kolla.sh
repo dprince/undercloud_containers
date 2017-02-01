@@ -27,4 +27,12 @@ cat >> template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
-./kolla-build --base centos --template-override template-overrides.j2 --registry "$REGISTRY" --namespace "$NAMESPACE" --push --tag "$TAG"
+./kolla-build \
+  --base centos \
+  --type binary \
+  --namespace "$NAMESPACE" \
+  --registry "$REGISTRY" \
+  --tag "$TAG" \
+  --push \
+  --template-override template-overrides.j2 \
+  $@
