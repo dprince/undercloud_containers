@@ -133,13 +133,13 @@ git clone git://git.openstack.org/openstack/python-tripleoclient
 cd python-tripleoclient/
 
 # Add heat_launcher module to help launch heat-all
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/30/427530/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/30/427530/2 && git cherry-pick FETCH_HEAD
 
 # Add fake_keystone
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/31/427531/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/31/427531/2 && git cherry-pick FETCH_HEAD
 
 # Deploy the undercloud with Heat
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/23 && git checkout FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/24 && git checkout FETCH_HEAD
 
 # Add `--keep-running` flag to undercloud deploy
 git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/90/414490/1 && git cherry-pick FETCH_HEAD
