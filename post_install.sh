@@ -5,7 +5,7 @@ source stackrc
 #scp ironic-python-agent.initramfs root@$SEED_IP:/httpboot/agent.ramdisk
 #scp ironic-python-agent.kernel root@$SEED_IP:/httpboot/agent.kernel
 
-OS_IMAGE_API_VERSION=1 openstack overcloud image upload #loads deploy kernel and ramdisk
+openstack overcloud image upload #loads deploy kernel and ramdisk
 openstack baremetal import --json ~/testenv.json
 
 for X in $(ironic node-list | grep 'None' | cut -d ' ' -f 2); do

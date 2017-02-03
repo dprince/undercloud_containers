@@ -44,7 +44,7 @@ git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/34 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/35 && git cherry-pick FETCH_HEAD
 
 # Add docker_puppet_tasks initialization on primary node
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/4 && git cherry-pick FETCH_HEAD
@@ -53,7 +53,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/10 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/11 && git cherry-pick FETCH_HEAD
 
 # Add Rabbit to the endpoint map
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/11 && git cherry-pick FETCH_HEAD
@@ -68,7 +68,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/5 && git cherry-pick FETCH_HEAD
 
 # Keystone
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/30 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/31 && git cherry-pick FETCH_HEAD
 
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/42 && git cherry-pick FETCH_HEAD
@@ -94,6 +94,9 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # Memcached
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/428546/1 && git cherry-pick FETCH_HEAD
 
+# Swift
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/34/425434/7 && git cherry-pick FETCH_HEAD
+
 # Only run containerized roles for now to make it faster (and probably make it work..).
 cat > roles_data_undercloud.yaml <<-EOF_CAT
 - name: Undercloud # the 'primary' role goes first
@@ -107,9 +110,9 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::Apache
     - OS::TripleO::Services::RabbitMQ
     - OS::TripleO::Services::GlanceApi
-    #- OS::TripleO::Services::SwiftProxy
-    #- OS::TripleO::Services::SwiftStorage
-    #- OS::TripleO::Services::SwiftRingBuilder
+    - OS::TripleO::Services::SwiftProxy
+    - OS::TripleO::Services::SwiftStorage
+    - OS::TripleO::Services::SwiftRingBuilder
     - OS::TripleO::Services::Memcached
     - OS::TripleO::Services::HeatApi
     - OS::TripleO::Services::HeatApiCfn
