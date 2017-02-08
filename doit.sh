@@ -161,6 +161,12 @@ cd heat-agents
 # Refactor docker invocation into function
 git fetch https://git.openstack.org/openstack/heat-agents refs/changes/33/426633/2 && git cherry-pick FETCH_HEAD
 
+# Set labels on containers managed by docker-cmd
+git fetch https://git.openstack.org/openstack/heat-agents refs/changes/16/428516/3 && git cherry-pick FETCH_HEAD
+
+# Delete containers based on labels, not state files
+git fetch https://git.openstack.org/openstack/heat-agents refs/changes/67/430467/4 && git cherry-pick FETCH_HEAD
+
 sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-config/hooks/json-file
 sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
 sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/os-refresh-config/configure.d/50-heat-config-docker-cmd /usr/libexec/os-refresh-config/configure.d/50-heat-config-docker-cmd
