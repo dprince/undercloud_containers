@@ -46,6 +46,8 @@ fi
 sudo systemctl start docker
 
 sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
+
+sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
 cd
