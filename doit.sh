@@ -25,7 +25,17 @@ if [ ! -f $HOME/.gitconfig ]; then
   git config --global user.name "TheBoss"
 fi
 
-sudo yum install -y python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient python-heat-agent-docker-cmd docker openvswitch openstack-heat-api openstack-heat-engine
+sudo yum install -y \
+  python-heat-agent-hiera \
+  python-heat-agent-apply-config \
+  python-heat-agent-puppet python-ipaddr \
+  python-tripleoclient \
+  python-heat-agent-docker-cmd \
+  docker \
+  openvswitch \
+  openstack-heat-api \
+  openstack-heat-engine \
+  openstack-puppet-modules
 cd
 
 sudo systemctl start openvswitch
