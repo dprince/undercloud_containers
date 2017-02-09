@@ -20,8 +20,14 @@ cat > template_overrides.j2 <<-EOF_CAT
 {% set base_centos_binary_packages_append = ['puppet'] %}
 {% set nova_scheduler_packages_append = ['openstack-tripleo-common'] %}
 
-# Required for mistral-db-populate to load tripleo custom actions
+# Required for mistral-db-populate to load tripleo custom actions on
+# the undercloud
 {% set mistral_api_packages_append = ['openstack-tripleo-common'] %}
+{% set mistral_engine_packages_append = ['openstack-tripleo-common'] %}
+
+# NOTE: Mistral executor needs to run nova-manage cells_v2 commands on
+# the undercloud baremetal workflows.
+{% set mistral_executor_packages_append = ['openstack-tripleo-common', 'openstack-nova-common'] %}
 
 # FIXME (kolla review to add ceilometer to swift proxy image)
 {% set swift_proxy_server_packages_append = ['openstack-ceilometer-common'] %}
