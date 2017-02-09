@@ -127,7 +127,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/60/430460/1 && git cherry-pick FETCH_HEAD
 
 # docker-toool:
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/431746/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/431746/2 && git cherry-pick FETCH_HEAD
 
 # Only run containerized roles for now to make it faster (and probably make it work..).
 cat > roles_data_undercloud.yaml <<-EOF_CAT
