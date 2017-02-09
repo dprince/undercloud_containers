@@ -25,8 +25,7 @@ if [ ! -f $HOME/.gitconfig ]; then
   git config --global user.name "TheBoss"
 fi
 
-
-sudo yum install -y python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient python-heat-agent-docker-cmd docker openvswitch
+sudo yum install -y python-heat-agent-hiera python-heat-agent-apply-config python-heat-agent-puppet python-ipaddr python-tripleoclient python-heat-agent-docker-cmd docker openvswitch openstack-heat-api openstack-heat-engine
 cd
 
 sudo systemctl start openvswitch
@@ -38,16 +37,32 @@ sudo systemctl start docker
 sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
+cd
+git clone git://git.openstack.org/openstack/heat
+cd heat
+# https://review.openstack.org/#/c/431234/ (Store user_domain in self._user_domain_id)
+git fetch https://git.openstack.org/openstack/heat refs/changes/34/431234/1 && git cherry-pick FETCH_HEAD
+python setup.py install
+
+# Puppet Ironic (this is required for dprince who needs to customize
+# Ironic configs via ExtraConfig settings.)
+cd /etc/puppet/modules
+rm tripleo
+git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
+cd tripleo
+#puppet-tripleo ::ironic::config to Ironic base profile
+git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/90/429290/1 && git cherry-pick FETCH_HEAD
+
 # TRIPLEO HEAT TEMPLATES
 cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/35 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/36 && git cherry-pick FETCH_HEAD
 
 # Add docker_puppet_tasks initialization on primary node
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/4 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/6 && git cherry-pick FETCH_HEAD
 
 # Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
@@ -55,44 +70,41 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # enable docker services in the registry
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/11 && git cherry-pick FETCH_HEAD
 
-# Add Rabbit to the endpoint map
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/20/420920/11 && git cherry-pick FETCH_HEAD
-
 # Nova
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/14 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/16 && git cherry-pick FETCH_HEAD
 
 # Heat
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/20 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/21 && git cherry-pick FETCH_HEAD
 
 # Ironic
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/5 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/6 && git cherry-pick FETCH_HEAD
 
 # Keystone
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/31 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/32 && git cherry-pick FETCH_HEAD
 
 # Glance
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/42 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/43 && git cherry-pick FETCH_HEAD
 
 # Neutron
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/6 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/7 && git cherry-pick FETCH_HEAD
 
 # Mistral
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/44/425744/3 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/44/425744/4 && git cherry-pick FETCH_HEAD
 
 # Mysql
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/30 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/31 && git cherry-pick FETCH_HEAD
 
 # Zaqar
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/76/425976/3 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/76/425976/4 && git cherry-pick FETCH_HEAD
 
 # Rabbitmq
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/426612/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/426612/2 && git cherry-pick FETCH_HEAD
 
 # Mongo
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/47/423347/5 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/47/423347/6 && git cherry-pick FETCH_HEAD
 
 # Memcached
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/428546/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/428546/2 && git cherry-pick FETCH_HEAD
 
 # Swift
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/34/425434/7 && git cherry-pick FETCH_HEAD
@@ -142,13 +154,13 @@ git clone git://git.openstack.org/openstack/python-tripleoclient
 cd python-tripleoclient/
 
 # Add heat_launcher module to help launch heat-all
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/30/427530/2 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/30/427530/4 && git cherry-pick FETCH_HEAD
 
 # Add fake_keystone
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/31/427531/2 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/31/427531/4 && git cherry-pick FETCH_HEAD
 
 # Deploy the undercloud with Heat
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/24 && git checkout FETCH_HEAD
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/26 && git checkout FETCH_HEAD
 
 # Add `--keep-running` flag to undercloud deploy
 git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/90/414490/1 && git cherry-pick FETCH_HEAD
@@ -211,8 +223,10 @@ tripleoupstream/centos-binary-mariadb:latest /bin/bash
 EOF_CAT
 chmod 755 $HOME/mysql_helper.sh
 
+# NOTE: we are switching back to --heat-native until this lands:
+# https://review.openstack.org/#/c/431234/ (Heat: Store user_domain in self._user_domain_id)
 cat > $HOME/run.sh <<-EOF_CAT
-time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
+time sudo openstack undercloud deploy --heat-native --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
 --keep-running \
 -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \

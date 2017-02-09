@@ -16,6 +16,18 @@ parameter_defaults:
 
   DockerNamespace: 172.19.0.2:8787/tripleo
   DockerNamespaceIsRegistry: true
+  Debug: true
+  UndercloudExtraConfig:
+    ironic::conductor::cleaning_disk_erase: 'metadata'
+    ironic::conductor::cleaning_network: 'ctlplane'
+    ironic::conductor::automated_clean: false
+    ironic::config::ironic_config:
+      iboot/max_retry:
+        value: 10
+      iboot/retry_interval:
+        value: 5
+      iboot/reboot_delay:
+        value: 8
 EOF_CAT
 
 # use this guy to run ad-hoc mysql queries for troubleshooting
@@ -45,17 +57,5 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 EOF_CAT
 chmod 755 $HOME/run.sh
 
-#FIXME these settings are for baremetal and need to be migrated
-# into containers for dprince
-#cat >> /etc/ironic/ironic.conf <<-EOF_CAT
-#[iboot]
-#max_retry=10
-#retry_interval=5
-#reboot_delay=8
-#EOF_CAT
-
 # Redirect console for AMT ttyS1 (dprince uses amtterm this way)
 #sed -e 's|text|text console=ttyS1,115200|' -i /usr/lib/python2.7/site-packages/ironic/drivers/modules/ipxe_config.template
-
-#systemctl restart openstack-ironic-api
-#systemctl restart openstack-ironic-conductor
