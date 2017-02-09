@@ -26,6 +26,7 @@ if [ ! -f $HOME/.gitconfig ]; then
 fi
 
 sudo yum install -y \
+  python-heat-agent \
   python-heat-agent-hiera \
   python-heat-agent-apply-config \
   python-heat-agent-puppet python-ipaddr \
