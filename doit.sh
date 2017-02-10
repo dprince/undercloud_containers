@@ -79,7 +79,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/9 && git cherry-pick FETCH_HEAD
 
 # Add option to diff containers after config stage. (Ian Main)
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/2 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/11 && git cherry-pick FETCH_HEAD
