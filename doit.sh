@@ -90,10 +90,10 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/21 && git cherry-pick FETCH_HEAD
 
 # Ironic
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/6 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/7 && git cherry-pick FETCH_HEAD
 
-# Keystone
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/32 && git cherry-pick FETCH_HEAD
+# Keystone - now with logging to log volume
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/33 && git cherry-pick FETCH_HEAD
 
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/43 && git cherry-pick FETCH_HEAD
