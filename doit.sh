@@ -54,8 +54,7 @@ cd
 git clone git://git.openstack.org/openstack/heat
 cd heat
 sudo rm -Rf /usr/lib/python2.7/site-packages/heat
-# https://review.openstack.org/#/c/431234/ (Store user_domain in self._user_domain_id)
-git fetch https://git.openstack.org/openstack/heat refs/changes/34/431234/1 && git cherry-pick FETCH_HEAD
+# https://review.openstack.org/#/c/431234/ (Store user_domain in self._user_domain_id) (merged)
 sudo python setup.py install
 
 # Puppet Ironic (this is required for dprince who needs to customize
