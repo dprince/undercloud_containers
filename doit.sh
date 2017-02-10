@@ -73,10 +73,10 @@ git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/37 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/38 && git cherry-pick FETCH_HEAD
 
 # Add docker_puppet_tasks initialization on primary node
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/7 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/8 && git cherry-pick FETCH_HEAD
 
 # Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
