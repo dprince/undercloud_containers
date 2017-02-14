@@ -6,8 +6,6 @@ NAMESPACE=${NAMESPACE:-"tripleo"}
 TAG=${TAG:-"latest"}
 
 cd
-git clone https://github.com/openstack/kolla.git
-cd kolla
 
 cat > template_overrides.j2 <<-EOF_CAT
 {% extends parent_template %}
@@ -48,12 +46,12 @@ cat >> template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
-./kolla-build \
+kolla-build \
   --base centos \
   --type binary \
   --namespace "$NAMESPACE" \
   --registry "$REGISTRY" \
   --tag "$TAG" \
   --push \
-  --template-override template-overrides.j2 \
+  --template-override template_overrides.j2 \
   $@

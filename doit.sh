@@ -34,7 +34,8 @@ sudo yum install -y \
   python-heat-agent-docker-cmd \
   docker \
   openvswitch \
-  openstack-puppet-modules
+  openstack-puppet-modules \
+  openstack-kolla
 cd
 
 sudo systemctl start openvswitch
