@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 set -eux
+systemctl stop docker
+dd if=/dev/zero of=/dev/vda bs=512 count=1
+rm -Rf /var/lib/docker
+cat > /etc/sysconfig/docker-storage-setup <<-EOF_CAT
+DEVS="/dev/vda"
+VG=docker-vg
+EOF_CAT
+docker-storage-setup
+systemctl start docker
 
 cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
@@ -47,7 +56,7 @@ chmod 755 $HOME/mysql_helper.sh
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
---heat-container-image=172.19.0.2:8787/tripleo/centos-binary-heat-engine \
+--heat-container-image=172.19.0.2:8787/tripleo/centos-binary-heat-all \
 -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml \

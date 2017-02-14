@@ -3,13 +3,13 @@ set -x
 
 sudo setenforce permissive
 
-# Make sure we get all new stuff.  I was having an issue with yum caching.
-sudo yum clean all
-
+# Uncomment this for quickstack.
+# FIXME: This breaks can break non-quickstack environments...
 # Workaround https://bugs.launchpad.net/tripleo-quickstart/+bug/1658030
-if [ ! -f /usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config ]; then
-  sudo yum -y reinstall python-heat-agent
-fi
+#if [ ! -f /usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config ]; then
+  #sudo yum clean all
+  #sudo yum -y reinstall python-heat-agent
+#fi
 
 sudo yum -y install curl vim-enhanced telnet epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
@@ -34,8 +34,6 @@ sudo yum install -y \
   python-heat-agent-docker-cmd \
   docker \
   openvswitch \
-  openstack-heat-api \
-  openstack-heat-engine \
   openstack-puppet-modules
 cd
 
@@ -50,13 +48,6 @@ sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
-cd
-git clone git://git.openstack.org/openstack/heat
-cd heat
-sudo rm -Rf /usr/lib/python2.7/site-packages/heat
-# https://review.openstack.org/#/c/431234/ (Store user_domain in self._user_domain_id) (merged)
-sudo python setup.py install
-
 # Puppet Ironic (this is required for dprince who needs to customize
 # Ironic configs via ExtraConfig settings.)
 cd /etc/puppet/modules
@@ -65,6 +56,9 @@ git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
 cd tripleo
 #puppet-tripleo ::ironic::config to Ironic base profile
 git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/90/429290/1 && git cherry-pick FETCH_HEAD
+
+# nova placement fixes
+git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/09/433109/1 && git cherry-pick FETCH_HEAD
 
 # TRIPLEO HEAT TEMPLATES
 cd
@@ -81,10 +75,13 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/11 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/12 && git cherry-pick FETCH_HEAD
 
 # Nova
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/16 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/17 && git cherry-pick FETCH_HEAD
+
+# Nova Placement: Configure authtoken in nova-placement api service
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/11/433111/1 && git cherry-pick FETCH_HEAD
 
 # Heat
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/21 && git cherry-pick FETCH_HEAD
@@ -149,7 +146,7 @@ cat > roles_data_undercloud.yaml <<-EOF_CAT
     - OS::TripleO::Services::HeatApiCfn
     - OS::TripleO::Services::HeatEngine
     - OS::TripleO::Services::NovaApi
-    #- OS::TripleO::Services::NovaPlacement
+    - OS::TripleO::Services::NovaPlacement
     - OS::TripleO::Services::NovaMetadata
     - OS::TripleO::Services::NovaScheduler
     - OS::TripleO::Services::NovaConductor
@@ -172,18 +169,9 @@ cd
 git clone git://git.openstack.org/openstack/python-tripleoclient
 cd python-tripleoclient/
 
-# Add heat_launcher module to help launch heat-all
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/30/427530/4 && git cherry-pick FETCH_HEAD
-
-# Add fake_keystone
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/31/427531/4 && git cherry-pick FETCH_HEAD
-
 # Deploy the undercloud with Heat
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/26 && git checkout FETCH_HEAD
-
-# Add `--keep-running` flag to undercloud deploy
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/90/414490/1 && git cherry-pick FETCH_HEAD
-sudo python setup.py install
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/30 && git checkout FETCH_HEAD
+python setup.py install
 
 cd
 git clone git://git.openstack.org/openstack/heat-agents
@@ -242,10 +230,8 @@ tripleoupstream/centos-binary-mariadb:latest /bin/bash
 EOF_CAT
 chmod 755 $HOME/mysql_helper.sh
 
-# NOTE: we are switching back to --heat-native until this lands:
-# https://review.openstack.org/#/c/431234/ (Heat: Store user_domain in self._user_domain_id)
 cat > $HOME/run.sh <<-EOF_CAT
-time sudo openstack undercloud deploy --heat-native --templates=$HOME/tripleo-heat-templates \
+time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
 --keep-running \
 -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \

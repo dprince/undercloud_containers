@@ -3,6 +3,12 @@ set -ux
 
 virsh destroy seed
 
+if [[ "$USER" == 'dprince' ]]; then
+  # cleanly wipe the VG (until I re-install my host OS and configure this differently)
+  sudo /sbin/lvremove centos/dockerseed
+  sudo /sbin/lvcreate -L 30GB -n dockerseed centos
+fi
+
 # call into scripts from tripleo-incubator (add these to your $PATH)
 cleanup-env
 setup-seed-vm -a amd64 -m 12388608 -c 6
