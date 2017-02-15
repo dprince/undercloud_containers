@@ -44,8 +44,6 @@ if [ -n "$LOCAL_REGISTRY" ]; then
 fi
 sudo systemctl start docker
 
-sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
-
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
@@ -67,16 +65,16 @@ git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/39 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/40 && git cherry-pick FETCH_HEAD
 
 # Add docker_puppet_tasks initialization on primary node
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/9 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/10 && git cherry-pick FETCH_HEAD
 
 # Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
 # enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/12 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/13 && git cherry-pick FETCH_HEAD
 
 # Nova
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/17 && git cherry-pick FETCH_HEAD
@@ -88,10 +86,10 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/21 && git cherry-pick FETCH_HEAD
 
 # Ironic
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/7 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/8 && git cherry-pick FETCH_HEAD
 
 # Keystone - now with logging to log volume
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/33 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/34 && git cherry-pick FETCH_HEAD
 
 # Glance
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/43 && git cherry-pick FETCH_HEAD
@@ -126,54 +124,16 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 # docker-toool:
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/431746/2 && git cherry-pick FETCH_HEAD
 
-# Only run containerized roles for now to make it faster (and probably make it work..).
-cat > roles_data_undercloud.yaml <<-EOF_CAT
-- name: Undercloud # the 'primary' role goes first
-  CountDefault: 1
-  disable_constraints: True
-  ServicesDefault:
-    - OS::TripleO::Services::Ntp #baremetal
-    - OS::TripleO::Services::MySQL
-    - OS::TripleO::Services::MongoDb
-    - OS::TripleO::Services::Keystone
-    - OS::TripleO::Services::Apache
-    - OS::TripleO::Services::RabbitMQ
-    - OS::TripleO::Services::GlanceApi
-    - OS::TripleO::Services::SwiftProxy
-    - OS::TripleO::Services::SwiftStorage
-    - OS::TripleO::Services::SwiftRingBuilder
-    - OS::TripleO::Services::Memcached
-    - OS::TripleO::Services::HeatApi
-    - OS::TripleO::Services::HeatApiCfn
-    - OS::TripleO::Services::HeatEngine
-    - OS::TripleO::Services::NovaApi
-    - OS::TripleO::Services::NovaPlacement
-    - OS::TripleO::Services::NovaMetadata
-    - OS::TripleO::Services::NovaScheduler
-    - OS::TripleO::Services::NovaConductor
-    - OS::TripleO::Services::MistralEngine
-    - OS::TripleO::Services::MistralApi
-    - OS::TripleO::Services::MistralExecutor
-    - OS::TripleO::Services::IronicApi
-    - OS::TripleO::Services::IronicConductor
-    - OS::TripleO::Services::IronicPxe
-    - OS::TripleO::Services::NovaIronic
-    - OS::TripleO::Services::Zaqar
-    - OS::TripleO::Services::NeutronApi
-    - OS::TripleO::Services::NeutronCorePlugin
-    - OS::TripleO::Services::NeutronOvsAgent
-    - OS::TripleO::Services::NeutronDhcpAgent
-EOF_CAT
+# TRIPLEO_CLIENT (uncomment this to hack on tripleoclient)
+#cd
+# REMOVE previously installed client stuff
+# sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
+#git clone git://git.openstack.org/openstack/python-tripleoclient
+#cd python-tripleoclient/
+## FETCH patches here...
+#python setup.py install
 
-# TRIPLEO_CLIENT
-cd
-git clone git://git.openstack.org/openstack/python-tripleoclient
-cd python-tripleoclient/
-
-# Deploy the undercloud with Heat
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/51/351351/30 && git checkout FETCH_HEAD
-python setup.py install
-
+# HEAT AGENTS
 cd
 git clone git://git.openstack.org/openstack/heat-agents
 cd heat-agents
