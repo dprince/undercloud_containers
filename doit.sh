@@ -64,9 +64,6 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
-# docker: new hybrid deployment architecture and configuration
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/416421/40 && git cherry-pick FETCH_HEAD
-
 # Add docker_puppet_tasks initialization on primary node
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/10 && git cherry-pick FETCH_HEAD
 
