@@ -65,51 +65,6 @@ cd tripleo-heat-templates
 # Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
 
-# enable docker services in the registry
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/67/421567/13 && git cherry-pick FETCH_HEAD
-
-# Nova
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/21/420921/17 && git cherry-pick FETCH_HEAD
-
-# Nova Placement: Configure authtoken in nova-placement api service
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/11/433111/1 && git cherry-pick FETCH_HEAD
-
-# Heat
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/39/417639/21 && git cherry-pick FETCH_HEAD
-
-# Ironic
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/17/421517/8 && git cherry-pick FETCH_HEAD
-
-# Keystone - now with logging to log volume
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/05/416605/34 && git cherry-pick FETCH_HEAD
-
-# Glance
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/70/400870/43 && git cherry-pick FETCH_HEAD
-
-# Neutron
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/99/422999/7 && git cherry-pick FETCH_HEAD
-
-# Mistral
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/44/425744/4 && git cherry-pick FETCH_HEAD
-
-# Mysql
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/01/414601/31 && git cherry-pick FETCH_HEAD
-
-# Zaqar
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/76/425976/4 && git cherry-pick FETCH_HEAD
-
-# Rabbitmq
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/426612/2 && git cherry-pick FETCH_HEAD
-
-# Mongo
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/47/423347/6 && git cherry-pick FETCH_HEAD
-
-# Memcached
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/428546/2 && git cherry-pick FETCH_HEAD
-
-# Swift
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/34/425434/7 && git cherry-pick FETCH_HEAD
-
 # parallelize docker-puppet
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/60/430460/2 && git cherry-pick FETCH_HEAD
 
