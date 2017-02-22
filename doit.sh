@@ -53,8 +53,6 @@ cd /etc/puppet/modules
 rm tripleo
 git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
 cd tripleo
-#puppet-tripleo ::ironic::config to Ironic base profile
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/90/429290/1 && git cherry-pick FETCH_HEAD
 
 # nova placement fixes
 git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/09/433109/1 && git cherry-pick FETCH_HEAD
@@ -63,9 +61,6 @@ git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/09/433
 cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
-
-# Add docker_puppet_tasks initialization on primary node
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/65/426565/10 && git cherry-pick FETCH_HEAD
 
 # Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
