@@ -54,9 +54,6 @@ rm tripleo
 git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
 cd tripleo
 
-# nova placement fixes
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/09/433109/1 && git cherry-pick FETCH_HEAD
-
 # TRIPLEO HEAT TEMPLATES
 cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
@@ -64,9 +61,6 @@ cd tripleo-heat-templates
 
 # Add option to diff containers after config stage. (Ian Main)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
-
-# parallelize docker-puppet
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/60/430460/2 && git cherry-pick FETCH_HEAD
 
 # docker-toool:
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/431746/2 && git cherry-pick FETCH_HEAD
