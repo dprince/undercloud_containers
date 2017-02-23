@@ -2,8 +2,8 @@ source stackrc
 
 # Manually copy these in because python-tripleoclient assumes it is
 # on local disk and fails remotely
-#scp ironic-python-agent.initramfs root@$SEED_IP:/httpboot/agent.ramdisk
-#scp ironic-python-agent.kernel root@$SEED_IP:/httpboot/agent.kernel
+scp ironic-python-agent.initramfs root@172.19.0.3:/var/lib/docker/volumes/ironic/_data/httpboot/agent.ramdisk
+scp ironic-python-agent.kernel root@172.19.0.3:/var/lib/docker/volumes/ironic/_data/httpboot/agent.kernel
 
 openstack overcloud image upload #loads deploy kernel and ramdisk
 openstack baremetal import --json ~/testenv.json
