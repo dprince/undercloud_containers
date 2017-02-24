@@ -84,6 +84,9 @@ sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/install.d/hook-docker-cmd.p
 sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/os-refresh-config/configure.d/50-heat-config-docker-cmd /usr/libexec/os-refresh-config/configure.d/50-heat-config-docker-cmd
 cd
 
+# Download docs too
+git clone git://git.openstack.org/openstack/tripleo-docs
+
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
 parameter_defaults:
