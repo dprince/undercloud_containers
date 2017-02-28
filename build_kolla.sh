@@ -29,7 +29,7 @@ fi
 
 kolla-build \
   --base centos \
-  --config-file=/home/dprince/kolla/kolla-build.conf \
+  --config-file=/tmp/kolla-build.conf \
   --type binary \
   --namespace "$NAMESPACE" \
   --registry "$REGISTRY" \
