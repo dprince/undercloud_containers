@@ -38,6 +38,7 @@ sudo yum install -y \
   python-heat-agent-puppet python-ipaddr \
   python-tripleoclient \
   docker \
+  docker-distribution \
   openvswitch \
   openstack-puppet-modules \
   openstack-kolla
@@ -48,6 +49,7 @@ if [ -n "$LOCAL_REGISTRY" ]; then
   echo "INSECURE_REGISTRY='--insecure-registry $LOCAL_REGISTRY'" | sudo tee /etc/sysconfig/docker
 fi
 sudo systemctl start docker
+sudo systemctl start docker-distribution
 
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
