@@ -33,9 +33,10 @@ sudo yum install -y \
   python-heat-agent \
   python-heat-agent-hiera \
   python-heat-agent-apply-config \
+  python-heat-agent-docker-cmd \
+  python-heat-agent-json-file \
   python-heat-agent-puppet python-ipaddr \
   python-tripleoclient \
-  python-heat-agent-docker-cmd \
   docker \
   openvswitch \
   openstack-puppet-modules \
@@ -63,13 +64,6 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
-# Add option to diff containers after config stage. (Ian Main)
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/42/425442/1 && git cherry-pick FETCH_HEAD
-
-# docker-toool:
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/46/431746/2 && git cherry-pick FETCH_HEAD
-
-# TRIPLEO_CLIENT (uncomment this to hack on tripleoclient)
 #cd
 # REMOVE previously installed client stuff
 # sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
@@ -79,14 +73,13 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 #python setup.py install
 
 # HEAT AGENTS
-cd
-git clone git://git.openstack.org/openstack/heat-agents
-cd heat-agents
+#cd
+#git clone git://git.openstack.org/openstack/heat-agents
+#cd heat-agents
 
-sudo cp heat-config-json-file/install.d/hook-json-file.py /usr/libexec/heat-config/hooks/json-file
-sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
-sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/os-refresh-config/configure.d/50-heat-config-docker-cmd /usr/libexec/os-refresh-config/configure.d/50-heat-config-docker-cmd
-cd
+#sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
+#sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/os-refresh-config/configure.d/50-heat-config-docker-cmd /usr/libexec/os-refresh-config/configure.d/50-heat-config-docker-cmd
+#cd
 
 # Download docs too
 git clone git://git.openstack.org/openstack/tripleo-docs
