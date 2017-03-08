@@ -9,10 +9,15 @@ TAG=${TAG:-"latest"}
 # rather than the older RDO tested pin often which doesn't contain the latest
 cat > /tmp/kolla-build.conf <<-EOF_CAT
 [DEFAULT]
+base=centos
+type=binary
 # Comma separated list of .rpm or .repo file(s) or URL(s) to install
 # before building containers (list value)
 #rpm_setup_config = http://buildlogs.centos.org/centos/7/cloud/x86_64/rdo-trunk-master-tested/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
 rpm_setup_config = http://trunk.rdoproject.org/centos7/current/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
+
+[profiles]
+undercloud=glance,heat,ironic,keystone,mariadb,memcached,mistral,mongodb,neutron,nova,rabbitmq,swift,zaqar
 EOF_CAT
 
 cd
@@ -27,12 +32,10 @@ cat >> /tmp/kolla_template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
-kolla-build \
-  --base centos \
+time kolla-build \
   --config-file=/tmp/kolla-build.conf \
-  --type binary \
-  --namespace "$NAMESPACE" \
-  --registry "$REGISTRY" \
-  --tag "$TAG" \
+  --namespace $NAMESPACE \
+  --registry $REGISTRY \
+  --tag $TAG \
   --template-override /tmp/kolla_template_overrides.j2 \
   $@
