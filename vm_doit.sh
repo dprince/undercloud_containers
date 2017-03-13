@@ -24,7 +24,7 @@ echo "undercloud.localdomain" > /etc/hostname
 echo "127.0.0.1  undercloud undercloud.localdomain" >> /etc/hosts
 hostname undercloud
 LOCAL_IP=172.19.0.3
-LOCAL_REGISTRY="172.19.0.2:8787"
+LOCAL_REGISTRY="172.19.0.2:5000"
 $(cat doit.sh)
 $(cat dprince.sh)
 EOF_SSH

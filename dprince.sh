@@ -23,7 +23,7 @@ parameter_defaults:
   NeutronWorkers: 3
   NeutronServicePlugins: ""
 
-  DockerNamespace: 172.19.0.2:8787/tripleo
+  DockerNamespace: 172.19.0.2:5000/tripleo
   DockerNamespaceIsRegistry: true
   Debug: true
   UndercloudExtraConfig:
@@ -49,17 +49,17 @@ docker run -ti \
 --volume /var/lib/config-data/mysql/root:/root/:ro \
 --volume /etc/hosts:/etc/hosts:ro \
 --volume mariadb:/var/lib/mysql/ \
-172.19.0.2:8787/tripleo/centos-binary-mariadb /bin/bash
+172.19.0.2:5000/tripleo/centos-binary-mariadb /bin/bash
 EOF_CAT
 chmod 755 $HOME/mysql_helper.sh
 
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
---heat-container-image=172.19.0.2:8787/tripleo/centos-binary-heat-all \
--e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
--e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
--e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml \
+--heat-container-image=172.19.0.2:5000/tripleo/centos-binary-heat-all \
+-e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
+-e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
+-e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
 -e $HOME/tripleo-heat-templates/environments/mongodb-nojournal.yaml \
 -e $HOME/custom.yaml
