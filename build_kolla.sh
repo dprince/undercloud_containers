@@ -14,10 +14,10 @@ type=binary
 # Comma separated list of .rpm or .repo file(s) or URL(s) to install
 # before building containers (list value)
 #rpm_setup_config = http://buildlogs.centos.org/centos/7/cloud/x86_64/rdo-trunk-master-tested/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
-rpm_setup_config = http://trunk.rdoproject.org/centos7/current/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
+rpm_setup_config = http://trunk.rdoproject.org/centos7/current-tripleo/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
 
 [profiles]
-undercloud=glance,heat,ironic,keystone,mariadb,memcached,mistral,mongodb,neutron,nova,rabbitmq,swift,zaqar
+undercloud=glance,heat,ironic,keystone,mariadb,memcached,mistral,mongodb,neutron,nova,rabbitmq,swift,zaqar,aodh
 EOF_CAT
 
 cd
