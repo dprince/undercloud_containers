@@ -13,13 +13,13 @@ sudo setenforce permissive
 
 sudo yum -y install curl vim-enhanced telnet epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
-if [ ! -e /etc/yum.repos.d/delorean-deps.repo ]; then
-  sudo curl -L -o /etc/yum.repos.d/delorean-deps.repo  http://trunk.rdoproject.org/centos7/delorean-deps.repo
-  sudo sed -i -e 's|priority=.*|priority=30|' /etc/yum.repos.d/delorean-deps.repo
-fi
-if [ ! -e /etc/yum.repos.d/delorean.repo ]; then
-  sudo curl -L -o /etc/yum.repos.d/delorean.repo http://trunk.rdoproject.org/centos7/current/delorean.repo
-fi
+
+cd
+git clone git@github.com:openstack/tripleo-repos.git
+cd tripleo-repos
+sudo ./setup.py install
+cd
+sudo tripleo-repos current
 
 sudo yum -y update
 
