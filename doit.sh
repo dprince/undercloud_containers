@@ -31,6 +31,7 @@ fi
 
 sudo yum install -y \
   python-heat-agent \
+  python-heat-agent-ansible \
   python-heat-agent-hiera \
   python-heat-agent-apply-config \
   python-heat-agent-docker-cmd \
