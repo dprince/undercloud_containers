@@ -49,6 +49,13 @@ sudo systemctl start openvswitch
 if [ -n "$LOCAL_REGISTRY" ]; then
   echo "INSECURE_REGISTRY='--insecure-registry $LOCAL_REGISTRY'" | sudo tee /etc/sysconfig/docker
 fi
+
+# Don't listen on the same port as keystone
+sed -i 's/5000/8787/' /etc/docker-distribution/registry/config.yml
+
+sudo systemctl enable docker
+sudo systemctl enable docker-distribution
+
 sudo systemctl start docker
 sudo systemctl start docker-distribution
 
