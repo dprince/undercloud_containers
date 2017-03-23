@@ -15,7 +15,7 @@ sudo yum -y install curl vim-enhanced telnet epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 
 cd
-git clone git@github.com:openstack/tripleo-repos.git
+git clone git://git.openstack.org/openstack/tripleo-repos.git
 cd tripleo-repos
 sudo ./setup.py install
 cd
