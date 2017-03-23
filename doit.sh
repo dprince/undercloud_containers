@@ -11,7 +11,7 @@ sudo setenforce permissive
   #sudo yum -y reinstall python-heat-agent
 #fi
 
-sudo yum -y install curl vim-enhanced telnet epel-release
+sudo yum -y install curl vim-enhanced telnet epel-release python-setuptools python-requests
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 
 cd
