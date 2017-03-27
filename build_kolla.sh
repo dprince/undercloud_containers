@@ -32,6 +32,13 @@ cat >> /tmp/kolla_template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
+# per https://review.rdoproject.org/r/#/c/5858/
+# adding it manually here until TripleO CI promotes
+cat >> /tmp/kolla_template_overrides.j2 <<-EOF_CAT
+{% set zaqar_packages_append = ['python-oslo-reports'] %}
+EOF_CAT
+
+
 time kolla-build \
   --config-file=/tmp/kolla-build.conf \
   --namespace $NAMESPACE \
