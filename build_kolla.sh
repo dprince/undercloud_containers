@@ -22,7 +22,8 @@ EOF_CAT
 
 cd
 
-curl -L -o /tmp/kolla_template_overrides.j2 http://git.openstack.org/cgit/openstack/tripleo-common/plain/contrib/tripleo_kolla_template_overrides.j2
+rm /tmp/kolla_template_overrides.j2
+touch /tmp/kolla_template_overrides.j2
 
 # Ironic removed drivers from the main tree so we add them
 # back here per developer
@@ -32,17 +33,11 @@ cat >> /tmp/kolla_template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
-# per https://review.rdoproject.org/r/#/c/5858/
-# adding it manually here until TripleO CI promotes
-cat >> /tmp/kolla_template_overrides.j2 <<-EOF_CAT
-{% set zaqar_packages_append = ['python-oslo-reports'] %}
-EOF_CAT
-
-
 time kolla-build \
   --config-file=/tmp/kolla-build.conf \
   --namespace $NAMESPACE \
   --registry $REGISTRY \
   --tag $TAG \
+  --template-override /usr/share/tripleo-common/container-images/tripleo_kolla_template_overrides.j2 \
   --template-override /tmp/kolla_template_overrides.j2 \
   $@
