@@ -15,9 +15,11 @@ type=binary
 # before building containers (list value)
 #rpm_setup_config = http://buildlogs.centos.org/centos/7/cloud/x86_64/rdo-trunk-master-tested/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
 rpm_setup_config = http://trunk.rdoproject.org/centos7/current-tripleo/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
-
-[profiles]
-undercloud=glance,heat,ironic,keystone,mariadb,memcached,mistral,mongodb,neutron,nova,rabbitmq,swift,zaqar,aodh
+namespace = $NAMESPACE
+registry = $REGISTRY
+tag = $TAG
+template_override = /usr/share/tripleo-common/container-images/tripleo_kolla_template_overrides.j2
+template_override = /tmp/kolla_template_overrides.j2
 EOF_CAT
 
 cd
@@ -33,11 +35,6 @@ cat >> /tmp/kolla_template_overrides.j2 <<-EOF_CAT
 EOF_CAT
 fi
 
-time kolla-build \
-  --config-file=/tmp/kolla-build.conf \
-  --namespace $NAMESPACE \
-  --registry $REGISTRY \
-  --tag $TAG \
-  --template-override /usr/share/tripleo-common/container-images/tripleo_kolla_template_overrides.j2 \
-  --template-override /tmp/kolla_template_overrides.j2 \
-  $@
+time openstack overcloud container image build --verbose \
+ --kolla-config-file /tmp/kolla-build.conf \
+ --config-file /usr/share/tripleo-common/container-images/overcloud_containers.yaml
