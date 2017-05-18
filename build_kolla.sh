@@ -14,6 +14,7 @@ type=binary
 # Comma separated list of .rpm or .repo file(s) or URL(s) to install
 # before building containers (list value)
 #rpm_setup_config = http://buildlogs.centos.org/centos/7/cloud/x86_64/rdo-trunk-master-tested/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
+#rpm_setup_config = http://trunk.rdoproject.org/centos7/current/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
 rpm_setup_config = http://trunk.rdoproject.org/centos7/current-tripleo/delorean.repo,http://trunk.rdoproject.org/centos7/delorean-deps.repo
 namespace = $NAMESPACE
 registry = $REGISTRY
