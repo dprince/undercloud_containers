@@ -46,6 +46,7 @@ sudo yum install -y \
 cd
 
 sudo systemctl start openvswitch
+sudo systemctl enable openvswitch
 if [ -n "$LOCAL_REGISTRY" ]; then
   echo "INSECURE_REGISTRY='--insecure-registry $LOCAL_REGISTRY'" | sudo tee /etc/sysconfig/docker
 fi
