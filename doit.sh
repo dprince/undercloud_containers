@@ -52,7 +52,7 @@ if [ -n "$LOCAL_REGISTRY" ]; then
 fi
 
 # Don't listen on the same port as keystone
-sed -i 's/5000/8787/' /etc/docker-distribution/registry/config.yml
+sudo sed -i 's/5000/8787/' /etc/docker-distribution/registry/config.yml
 
 sudo systemctl enable docker
 sudo systemctl enable docker-distribution
