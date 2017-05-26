@@ -63,8 +63,13 @@ sudo systemctl start docker-distribution
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
-# Puppet Ironic (this is required for dprince who needs to customize
-# Ironic configs via ExtraConfig settings.)
+# FIXME: We need paunch until RDO gets us an RPM built
+cd
+git clone git://git.openstack.org/openstack/paunch
+cd paunch
+sudo python setup.py install
+
+# PUPPET-TRIPLEO
 cd /etc/puppet/modules
 rm tripleo
 git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
@@ -74,23 +79,6 @@ cd tripleo
 cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
-
-#cd
-# REMOVE previously installed client stuff
-# sudo rm -Rf /usr/lib/python2.7/site-packages/python_tripleoclient-*
-#git clone git://git.openstack.org/openstack/python-tripleoclient
-#cd python-tripleoclient/
-## FETCH patches here...
-#python setup.py install
-
-# HEAT AGENTS
-#cd
-#git clone git://git.openstack.org/openstack/heat-agents
-#cd heat-agents
-
-#sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/install.d/hook-docker-cmd.py /usr/libexec/heat-config/hooks/docker-cmd
-#sudo ln -sf $HOME/heat-agents/heat-config-docker-cmd/os-refresh-config/configure.d/50-heat-config-docker-cmd /usr/libexec/os-refresh-config/configure.d/50-heat-config-docker-cmd
-#cd
 
 # Download docs too
 git clone git://git.openstack.org/openstack/tripleo-docs
