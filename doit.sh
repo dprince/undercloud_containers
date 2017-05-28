@@ -90,11 +90,13 @@ parameter_defaults:
 EOF_CAT
 
 # Custom settings can go here
+if [[ ! -f $HOME/custom.yaml ]]; then
 cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
   UndercloudNameserver: 8.8.8.8
   NeutronServicePlugins: ""
 EOF_CAT
+fi
 
 LOCAL_IP=${LOCAL_IP:-`/usr/sbin/ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
 
