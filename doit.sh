@@ -47,33 +47,32 @@ cd
 
 sudo systemctl start openvswitch
 sudo systemctl enable openvswitch
-if [ -n "$LOCAL_REGISTRY" ]; then
-  echo "INSECURE_REGISTRY='--insecure-registry $LOCAL_REGISTRY'" | sudo tee /etc/sysconfig/docker
-fi
-
-# Don't listen on the same port as keystone
-sudo sed -i 's/5000/8787/' /etc/docker-distribution/registry/config.yml
-
-sudo systemctl enable docker
-sudo systemctl enable docker-distribution
-
-sudo systemctl start docker
-sudo systemctl start docker-distribution
 
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
+sudo mkdir -p /etc/puppet/hieradata/
+sudo tee /etc/puppet/hieradata/docker_setup.yaml /etc/puppet/hiera.yaml <<-EOF_CAT
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: /etc/puppet/hieradata
+:hierarchy:
+  - docker_setup
+EOF_CAT
+
+echo "step: 5" | sudo tee /etc/puppet/hieradata/docker_setup.yaml
+if [ -n "$LOCAL_REGISTRY" ]; then
+  echo "tripleo::profile::base::docker::insecure_registry: $LOCAL_REGISTRY" | sudo tee /etc/puppet/hieradata/docker_setup.yaml
+fi
+
+sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
 # FIXME: We need paunch until RDO gets us an RPM built
 cd
 git clone git://git.openstack.org/openstack/paunch
 cd paunch
 sudo python setup.py install
-
-# PUPPET-TRIPLEO
-cd /etc/puppet/modules
-rm tripleo
-git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
-cd tripleo
 
 # TRIPLEO HEAT TEMPLATES
 cd
