@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -eux
-systemctl stop docker
+#systemctl stop docker
 
-cat > /etc/sysconfig/docker-storage <<-EOF_CAT
-DOCKER_STORAGE_OPTIONS=-s overlay2
-EOF_CAT
-systemctl start docker
+#cat > /etc/sysconfig/docker-storage <<-EOF_CAT
+#DOCKER_STORAGE_OPTIONS=-s overlay2
+#EOF_CAT
+#systemctl start docker
 
 #FIXME: copy in custom baremetal.yaml to disable iboot validations
 #cp /root/baremetal.yaml /usr/share/openstack-tripleo-common/workbooks/
