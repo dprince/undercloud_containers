@@ -63,16 +63,17 @@ EOF_CAT
 
 echo "step: 5" | sudo tee /etc/puppet/hieradata/docker_setup.yaml
 if [ -n "$LOCAL_REGISTRY" ]; then
-  echo "tripleo::profile::base::docker::insecure_registry: $LOCAL_REGISTRY" | sudo tee /etc/puppet/hieradata/docker_setup.yaml
+  echo "tripleo::profile::base::docker::docker_namespace: $LOCAL_REGISTRY" | sudo tee -a /etc/puppet/hieradata/docker_setup.yaml
+  echo "tripleo::profile::base::docker::insecure_registry: True" | sudo tee -a /etc/puppet/hieradata/docker_setup.yaml
 fi
 
 sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
 # FIXME: We need paunch until RDO gets us an RPM built
-cd
-git clone git://git.openstack.org/openstack/paunch
-cd paunch
-sudo python setup.py install
+#cd
+#git clone git://git.openstack.org/openstack/paunch
+#cd paunch
+#sudo python setup.py install
 
 # TRIPLEO HEAT TEMPLATES
 cd
