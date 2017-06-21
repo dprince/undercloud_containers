@@ -2,10 +2,12 @@ source stackrc
 
 # Manually copy these in because python-tripleoclient assumes it is
 # on local disk and fails remotely
-scp ironic-python-agent.initramfs root@172.19.0.3:/var/lib/ironic/httpboot/agent.ramdisk
-scp ironic-python-agent.kernel root@172.19.0.3:/var/lib/ironic/httpboot/agent.kernel
+scp images/ironic-python-agent.initramfs root@172.19.0.3:/var/lib/ironic/httpboot/agent.ramdisk
+scp images/ironic-python-agent.kernel root@172.19.0.3:/var/lib/ironic/httpboot/agent.kernel
 
+cd images
 openstack overcloud image upload #loads deploy kernel and ramdisk
+cd -
 openstack overcloud node import testenv.json --provide
 
 for X in $(ironic node-list | grep 'None' | cut -d ' ' -f 2); do
@@ -18,7 +20,7 @@ openstack baremetal configure boot
 nova keypair-add --pub-key ~/.ssh/id_rsa.pub default
 
 if [[ "$USER" == 'dprince' ]]; then
-  bash dprince_flavors.sh
+  bash undercloud_containers/dprince_flavors.sh
 fi
 
 #FIXME: add this once we get Ironic inspector added to t-h-t
