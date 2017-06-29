@@ -74,11 +74,6 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
-# Default docker-puppet.py logging to INFO
-# NOTE: this resolves the issue where the undercloud logs now dump so much
-# logs from puppet you can't even tell what runs correctly anymore
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/47/477547/3 && git cherry-pick FETCH_HEAD
-
 # Support configurable Zaqar backends
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/1 && git cherry-pick FETCH_HEAD
 
@@ -92,7 +87,7 @@ git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
 cd tripleo
 
 # Zaqar: support configurable backends
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/54/477554/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/54/477554/2 && git cherry-pick FETCH_HEAD
 
 #MySQL: configure ::zaqar::db::mysql selectively
 git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/58/477558/1 && git cherry-pick FETCH_HEAD
