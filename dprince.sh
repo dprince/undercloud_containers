@@ -62,7 +62,6 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
--e $HOME/tripleo-heat-templates/environments/mongodb-nojournal.yaml \
 -e $HOME/custom.yaml
 EOF_CAT
 #-e $HOME/tripleo-heat-templates/environments/puppet-pacemaker.yaml \

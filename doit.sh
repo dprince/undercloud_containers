@@ -29,6 +29,7 @@ if [ ! -f $HOME/.gitconfig ]; then
   git config --global user.name "TheBoss"
 fi
 
+sudo yum clean all
 sudo yum install -y \
   python-heat-agent \
   python-heat-agent-ansible \
@@ -41,8 +42,7 @@ sudo yum install -y \
   docker \
   docker-distribution \
   openvswitch \
-  openstack-puppet-modules \
-  openstack-kolla
+  openstack-puppet-modules
 cd
 
 sudo systemctl start openvswitch
@@ -75,22 +75,19 @@ git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # Support configurable Zaqar backends
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/12 && git checkout FETCH_HEAD
 
 # Drop MongoDB from the undercloud
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/9 && git cherry-pick FETCH_HEAD
+
+# Fix ironic-pxe startup issues
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/43/481343/1 && git cherry-pick FETCH_HEAD
 
 # PUPPET-TRIPLEO
 cd /etc/puppet/modules
 rm tripleo
 git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
 cd tripleo
-
-# Zaqar: support configurable backends
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/54/477554/2 && git cherry-pick FETCH_HEAD
-
-#MySQL: configure ::zaqar::db::mysql selectively
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/58/477558/1 && git cherry-pick FETCH_HEAD
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
@@ -118,7 +115,6 @@ sudo docker ps -qa | xargs sudo docker rm -f
 sudo docker volume ls -q | xargs sudo docker volume rm
 sudo rm -Rf /var/lib/mysql
 sudo rm -Rf /var/lib/rabbitmq
-sudo rm -Rf /var/lib/mongodb
 EOF_CAT
 chmod 755 $HOME/cleanup.sh
 
@@ -144,7 +140,6 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
--e $HOME/tripleo-heat-templates/environments/mongodb-nojournal.yaml \
 -e $HOME/custom.yaml
 EOF_CAT
 chmod 755 $HOME/run.sh
