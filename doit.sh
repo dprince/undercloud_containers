@@ -81,7 +81,7 @@ git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/change
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/9 && git cherry-pick FETCH_HEAD
 
 # Fix ironic-pxe startup issues
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/43/481343/1 && git cherry-pick FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/43/481343/2 && git cherry-pick FETCH_HEAD
 
 # PUPPET-TRIPLEO
 cd /etc/puppet/modules
