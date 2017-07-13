@@ -62,10 +62,11 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
--e $HOME/custom.yaml
+-e $HOME/custom.yaml -e $HOME/containers.yaml
 EOF_CAT
 #-e $HOME/tripleo-heat-templates/environments/puppet-pacemaker.yaml \
 chmod 755 $HOME/run.sh
 
+openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
 # Redirect console for AMT ttyS1 (dprince uses amtterm this way)
 #sed -e 's|text|text console=ttyS1,115200|' -i /usr/lib/python2.7/site-packages/ironic/drivers/modules/ipxe_config.template
