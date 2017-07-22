@@ -68,5 +68,7 @@ EOF_CAT
 chmod 755 $HOME/run.sh
 
 openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
+#overcloud container image prepare --namespace=trunk.registry.rdoproject.org/tripleo --env-file=/root/rdo.yaml
+
 # Redirect console for AMT ttyS1 (dprince uses amtterm this way)
 #sed -e 's|text|text console=ttyS1,115200|' -i /usr/lib/python2.7/site-packages/ironic/drivers/modules/ipxe_config.template

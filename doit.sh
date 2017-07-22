@@ -66,14 +66,6 @@ if [ -n "$LOCAL_REGISTRY" ]; then
   echo "tripleo::profile::base::docker::insecure_registry_address: $LOCAL_REGISTRY" | sudo tee -a /etc/puppet/hieradata/docker_setup.yaml
 fi
 
-# PUPPET-TRIPLEO
-cd /etc/puppet/modules
-rm tripleo
-git clone git://git.openstack.org/openstack/puppet-tripleo tripleo
-cd tripleo
-
-git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/12/479412/4 && git cherry-pick FETCH_HEAD
-
 cd
 sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
@@ -82,19 +74,20 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
-# BEGIN LAND_IN_ORDER these first 4 in order due to conflicts!!!!
-# Use a single configuration file for specifying docker containers.
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/28/478628/13 && git cherry-pick FETCH_HEAD
-
 # Support configurable Zaqar backends
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/18 && git checkout FETCH_HEAD
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/23 && git checkout FETCH_HEAD
 
 # Drop MongoDB from the undercloud
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/15 && git cherry-pick FETCH_HEAD
-#END LAND_IN_ORDER
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/21 && git cherry-pick FETCH_HEAD
 
-# Remove DockerNamespace references
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/98/479398/11 && git cherry-pick FETCH_HEAD
+# Drop step_config as top level docker requirement
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/16/442716/8 && git cherry-pick FETCH_HEAD
+
+# add unit tests on service_name
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/55/442755/5 && git cherry-pick FETCH_HEAD
+
+# Ironic Inspector
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/15 && git cherry-pick FETCH_HEAD
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
@@ -148,7 +141,7 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
 -e $HOME/custom.yaml \
--e $HOME/tripleo-heat-templates/environments/docker-centos-rdo.yaml
+-e $HOME/tripleo-heat-templates/environments/docker-centos-tripleoupstream.yaml
 EOF_CAT
 chmod 755 $HOME/run.sh
 
