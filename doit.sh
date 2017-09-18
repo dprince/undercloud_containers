@@ -17,7 +17,7 @@ sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x8
 cd
 git clone https://git.openstack.org/openstack/tripleo-repos
 cd tripleo-repos
-sudo ./setup.py install
+sudo python setup.py install
 cd
 sudo tripleo-repos current
 
