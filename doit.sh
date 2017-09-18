@@ -14,6 +14,9 @@ sudo setenforce permissive
 sudo yum -y install curl vim-enhanced telnet epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 
+# for tripleo-repos install:
+sudo yum -y install python-setuptools
+
 cd
 git clone https://git.openstack.org/openstack/tripleo-repos
 cd tripleo-repos
