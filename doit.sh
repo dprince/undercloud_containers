@@ -15,7 +15,7 @@ sudo yum -y install curl vim-enhanced telnet epel-release
 sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 
 # for tripleo-repos install:
-sudo yum -y install python-setuptools
+sudo yum -y install python-setuptools python-requests
 
 cd
 git clone https://git.openstack.org/openstack/tripleo-repos
@@ -78,19 +78,19 @@ git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
 # Support configurable Zaqar backends
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/23 && git checkout FETCH_HEAD
+#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/23 && git checkout FETCH_HEAD
 
 # Drop MongoDB from the undercloud
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/21 && git cherry-pick FETCH_HEAD
+#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/21 && git cherry-pick FETCH_HEAD
 
 # Drop step_config as top level docker requirement
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/16/442716/8 && git cherry-pick FETCH_HEAD
+#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/16/442716/8 && git cherry-pick FETCH_HEAD
 
 # add unit tests on service_name
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/55/442755/5 && git cherry-pick FETCH_HEAD
+#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/55/442755/5 && git cherry-pick FETCH_HEAD
 
 # Ironic Inspector
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/15 && git cherry-pick FETCH_HEAD
+#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/15 && git cherry-pick FETCH_HEAD
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
@@ -144,8 +144,11 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
 -e $HOME/custom.yaml \
--e $HOME/tripleo-heat-templates/environments/docker-centos-tripleoupstream.yaml
+-e $HOME/containers-rdo.yaml
 EOF_CAT
 chmod 755 $HOME/run.sh
+
+#openstack overcloud container image prepare --tag tripleo-ci-testing --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
+openstack overcloud container image prepare --tag passed-ci --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
 
 echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
