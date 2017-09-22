@@ -77,6 +77,9 @@ cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
 cd tripleo-heat-templates
 
+#Sync undercloud stackrc w/ instack (fixes post deployment issues)
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/45/506745/1 && git cherry-pick FETCH_HEAD
+
 # Support configurable Zaqar backends
 #git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/23 && git checkout FETCH_HEAD
 
