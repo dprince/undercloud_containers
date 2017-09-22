@@ -148,7 +148,13 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 EOF_CAT
 chmod 755 $HOME/run.sh
 
+# The current state of the world is:
+#  - This one works and is being pushed to:
 #openstack overcloud container image prepare --tag tripleo-ci-testing --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
-openstack overcloud container image prepare --tag passed-ci --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
+#  - This one doesn't work but it should (apparently auth issues):
+#openstack overcloud container image prepare --tag passed-ci --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
+#  - This one works:
+openstack overcloud container image prepare --tag passed-ci --namespace tripleopike --env-file $HOME/containers-rdo.yaml
+# Note that there is a tripleo-ci-testing tag in dockerhub but it's not being updated.
 
 echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
