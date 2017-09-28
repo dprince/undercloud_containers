@@ -72,22 +72,40 @@ fi
 cd
 sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
-git clone git://git.openstack.org/openstack/python-tripleoclient
-cd python-tripleoclient
+# TRIPLEO-COMMON
+if [ ! -d $HOME/tripleo-common ]; then
+  git clone git://git.openstack.org/openstack/tripleo-common
+  cd tripleo-common
+  # config download support:
+  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/2 && git cherry-pick FETCH_HEAD
+  sudo python setup.py install
+  cd
+fi
 
-# Make it so heat never exits
-git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
+# PYTHON TRIPLEOCLIENT
+if [ ! -d $HOME/python-tripleoclient ]; then
+  git clone git://git.openstack.org/openstack/python-tripleoclient
+  cd python-tripleoclient
 
-sudo python setup.py install
-cd
+  # Make it so heat never exits
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
+
+  sudo python setup.py install
+  cd
+fi
 
 # TRIPLEO HEAT TEMPLATES
-cd
-git clone git://git.openstack.org/openstack/tripleo-heat-templates
-cd tripleo-heat-templates
+if [ ! -d $HOME/tripleo-heat-templates ]; then
+  cd
+  git clone git://git.openstack.org/openstack/tripleo-heat-templates
+  cd tripleo-heat-templates
 
-#Sync undercloud stackrc w/ instack (fixes post deployment issues)
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/45/506745/1 && git cherry-pick FETCH_HEAD
+  #Sync undercloud stackrc w/ instack (fixes post deployment issues)
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/45/506745/1 && git cherry-pick FETCH_HEAD
+
+  # Config download support for all deployment types:
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/27/505827/9 && git cherry-pick FETCH_HEAD
+fi
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
