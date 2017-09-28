@@ -176,7 +176,7 @@ $HOME/tripleo-common/scripts/tripleo-config-download --stack-name undercloud --o
 wd=`ls -1dc playbooks/tripleo* | head -n 1`
 echo using $wd
 pushd $wd
-time ansible-playbook -i $HOME/playbooks/inventory deploy_steps_playbook.yaml -e role_name=Undercloud -e deploy_server_id=undercloud -e bootstrap_server_id=undercloud
+time sudo ansible-playbook -i $HOME/playbooks/inventory deploy_steps_playbook.yaml -e role_name=Undercloud -e deploy_server_id=undercloud -e bootstrap_server_id=undercloud
 # -e force=true
 popd
 EOF_CAT
@@ -202,4 +202,9 @@ EOF_CAT
 openstack overcloud container image prepare --tag passed-ci --namespace tripleopike --env-file $HOME/containers-rdo.yaml
 # Note that there is a tripleo-ci-testing tag in dockerhub but it's not being updated.
 
+set +x
+
 echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
+
+echo 'The next step is to run ~/run.sh, which will create a heat deployment of your templates.'
+echo 'Once that completes, source the stackrc (in /root) and run ansible.sh to download and run the ansible playbooks.'
