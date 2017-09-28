@@ -151,7 +151,8 @@ EOF_CAT
 chmod 755 $HOME/mysql_helper.sh
 
 cat > $HOME/run.sh <<-EOF_CAT
-time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
+time sudo openstack undercloud deploy \
+--templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \
 --keep-running \
 -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
@@ -159,7 +160,8 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \
 -e $HOME/custom.yaml \
--e $HOME/containers-rdo.yaml
+-e $HOME/containers-rdo.yaml \
+-e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml
 EOF_CAT
 chmod 755 $HOME/run.sh
 
