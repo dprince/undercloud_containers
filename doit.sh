@@ -72,6 +72,15 @@ fi
 cd
 sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
+git clone git://git.openstack.org/openstack/python-tripleoclient
+cd python-tripleoclient
+
+# Make it so heat never exits
+git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
+
+sudo python setup.py install
+cd
+
 # TRIPLEO HEAT TEMPLATES
 cd
 git clone git://git.openstack.org/openstack/tripleo-heat-templates
@@ -79,21 +88,6 @@ cd tripleo-heat-templates
 
 #Sync undercloud stackrc w/ instack (fixes post deployment issues)
 git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/45/506745/1 && git cherry-pick FETCH_HEAD
-
-# Support configurable Zaqar backends
-#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/59/477559/23 && git checkout FETCH_HEAD
-
-# Drop MongoDB from the undercloud
-#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/62/477562/21 && git cherry-pick FETCH_HEAD
-
-# Drop step_config as top level docker requirement
-#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/16/442716/8 && git cherry-pick FETCH_HEAD
-
-# add unit tests on service_name
-#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/55/442755/5 && git cherry-pick FETCH_HEAD
-
-# Ironic Inspector
-#git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/15 && git cherry-pick FETCH_HEAD
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
