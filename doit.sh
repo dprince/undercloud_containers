@@ -76,8 +76,8 @@ sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo:
 if [ ! -d $HOME/tripleo-common ]; then
   git clone git://git.openstack.org/openstack/tripleo-common
   cd tripleo-common
-  # config download support:
-  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/2 && git cherry-pick FETCH_HEAD
+  # config download support - cherry-pick isn't working atm, conflicts..:
+  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/2 && git checkout FETCH_HEAD
   sudo python setup.py install
   cd
 fi
@@ -105,6 +105,9 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # Config download support for all deployment types:
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/27/505827/9 && git cherry-pick FETCH_HEAD
+
+  # Name the post deployment so the ansible generator works:
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/51/508351/1 && git cherry-pick FETCH_HEAD
 fi
 
 # this is how you inject an admin password
@@ -164,6 +167,31 @@ time sudo openstack undercloud deploy \
 -e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml
 EOF_CAT
 chmod 755 $HOME/run.sh
+
+# TEMPORARY!!  This all needs to end up in tripleoclient.
+mkdir $HOME/playbooks
+
+cat > $HOME/ansible.sh <<-EOF_CAT
+$HOME/tripleo-common/scripts/tripleo-config-download --stack-name undercloud --output-dir $HOME/playbooks
+wd=`ls -1dc playbooks/tripleo* | head -n 1`
+echo using $wd
+pushd $wd
+time ansible-playbook -i $HOME/playbooks/inventory deploy_steps_playbook.yaml -e role_name=Undercloud -e deploy_server_id=undercloud -e bootstrap_server_id=undercloud
+# -e force=true
+popd
+EOF_CAT
+chmod 755 $HOME/ansible.sh
+
+cat > $HOME/playbooks/inventory <<-EOF_CAT
+[targets]
+overcloud ansible_connection=local
+
+[Undercloud]
+overcloud
+
+[undercloud-undercloud-0]
+overcloud
+EOF_CAT
 
 # The current state of the world is:
 #  - This one works and is being pushed to:
