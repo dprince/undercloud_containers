@@ -174,6 +174,9 @@ chmod 755 $HOME/run.sh
 mkdir $HOME/playbooks
 
 cat > $HOME/ansible.sh <<-'EOF_CAT'
+#!/usr/bin/env bash
+set -xe
+
 ~/tripleo-common/scripts/tripleo-config-download --stack-name undercloud --output-dir ~/playbooks
 wd=`ls -1dc ~/playbooks/tripleo* | head -n 1`
 echo using $wd
