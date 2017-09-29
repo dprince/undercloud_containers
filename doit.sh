@@ -89,6 +89,8 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Make it so heat never exits
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
+  # Mount heat tmpfiles in a tmpfs filesystem
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
