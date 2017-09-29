@@ -77,7 +77,7 @@ if [ ! -d $HOME/tripleo-common ]; then
   git clone git://git.openstack.org/openstack/tripleo-common
   cd tripleo-common
   # config download support.  Checkout as it has deps.
-  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/2 && git checkout FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/3 && git checkout FETCH_HEAD
   sudo python setup.py install
   cd
 fi
@@ -91,6 +91,8 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
   # Mount heat tmpfiles in a tmpfs filesystem
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/1 && git cherry-pick FETCH_HEAD
+  # Set the undercloud hostname:
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/18/508618/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -106,7 +108,7 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/45/506745/1 && git cherry-pick FETCH_HEAD
 
   # Config download support for all deployment types:
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/27/505827/9 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/27/505827/10 && git cherry-pick FETCH_HEAD
 
   # Name the post deployment so the ansible generator works:
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/51/508351/1 && git cherry-pick FETCH_HEAD
@@ -124,6 +126,7 @@ cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
   UndercloudNameserver: 8.8.8.8
   NeutronServicePlugins: ""
+  DockerPuppetProcessCount: 100
 EOF_CAT
 fi
 
@@ -181,12 +184,14 @@ set -xe
 wd=`ls -1dc ~/playbooks/tripleo* | head -n 1`
 echo using $wd
 pushd $wd
-time sudo ansible-playbook -i ~/playbooks/inventory deploy_steps_playbook.yaml -e role_name=Undercloud -e deploy_server_id=undercloud -e bootstrap_server_id=undercloud
+time sudo ansible-playbook -i ~/playbooks/inventory deploy_steps_playbook.yaml -e role_name=Undercloud
 # -e force=true
 popd
 EOF_CAT
 
 chmod 755 $HOME/ansible.sh
+
+hostname=`hostname -s`
 
 cat > $HOME/playbooks/inventory <<-EOF_CAT
 [targets]
@@ -195,7 +200,7 @@ overcloud ansible_connection=local
 [Undercloud]
 overcloud
 
-[undercloud-undercloud-0]
+[$hostname]
 overcloud
 EOF_CAT
 
