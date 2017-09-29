@@ -76,7 +76,7 @@ sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo:
 if [ ! -d $HOME/tripleo-common ]; then
   git clone git://git.openstack.org/openstack/tripleo-common
   cd tripleo-common
-  # config download support - cherry-pick isn't working atm, conflicts..:
+  # config download support.  Checkout as it has deps.
   git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/2 && git checkout FETCH_HEAD
   sudo python setup.py install
   cd
