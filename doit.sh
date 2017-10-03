@@ -78,6 +78,7 @@ if [ ! -d $HOME/tripleo-common ]; then
   cd tripleo-common
   # config download support.  Checkout as it has deps.
   git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/3 && git checkout FETCH_HEAD
+
   sudo python setup.py install
   cd
 fi
@@ -93,6 +94,8 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/1 && git cherry-pick FETCH_HEAD
   # Set the undercloud hostname:
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/18/508618/1 && git cherry-pick FETCH_HEAD
+  # Support to run ansible directly:
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/89/509289/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -103,9 +106,6 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
-
-  #Sync undercloud stackrc w/ instack (fixes post deployment issues)
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/45/506745/1 && git cherry-pick FETCH_HEAD
 
   # Config download support for all deployment types:
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/27/505827/10 && git cherry-pick FETCH_HEAD
