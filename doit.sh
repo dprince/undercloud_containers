@@ -95,7 +95,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # Set the undercloud hostname:
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/18/508618/1 && git cherry-pick FETCH_HEAD
   # Support to run ansible directly:
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/89/509289/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/86/509586/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
