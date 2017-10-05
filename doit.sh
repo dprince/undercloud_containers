@@ -177,21 +177,6 @@ chmod 755 $HOME/run.sh
 # TEMPORARY!!  This all needs to end up in tripleoclient.
 mkdir $HOME/playbooks
 
-cat > $HOME/ansible.sh <<-'EOF_CAT'
-#!/usr/bin/env bash
-set -xe
-
-~/tripleo-common/scripts/tripleo-config-download --stack-name undercloud --output-dir ~/playbooks
-wd=`ls -1dc ~/playbooks/tripleo* | head -n 1`
-echo using $wd
-pushd $wd
-time sudo ansible-playbook -i ~/playbooks/inventory deploy_steps_playbook.yaml -e role_name=Undercloud
-# -e force=true
-popd
-EOF_CAT
-
-chmod 755 $HOME/ansible.sh
-
 hostname=`hostname -s`
 
 cat > $HOME/playbooks/inventory <<-EOF_CAT
