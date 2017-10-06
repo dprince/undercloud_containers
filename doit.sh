@@ -112,6 +112,22 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # Name the post deployment so the ansible generator works:
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/51/508351/1 && git cherry-pick FETCH_HEAD
+
+  # our undercloud default nic should be eth1(nic2)
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/510212/1 && git cherry-pick FETCH_HEAD
+fi
+
+# os-net-config
+if [ ! -d $HOME/tripleo-heat-templates ]; then
+  cd
+  git clone git://git.openstack.org/openstack/os-net-config
+  cd os-net-config
+
+  # Allow dns_servers to be an empty array
+  git fetch https://git.openstack.org/openstack/os-net-config refs/changes/07/510207/1 && git cherry-pick FETCH_HEAD
+
+  sudo python setup.py install
+
 fi
 
 # this is how you inject an admin password
