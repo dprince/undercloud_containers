@@ -11,8 +11,10 @@ sudo setenforce permissive
   #sudo yum -y reinstall python-heat-agent
 #fi
 
-sudo yum -y install curl vim-enhanced telnet epel-release
-sudo yum install -y https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
+sudo yum -y install curl vim-enhanced telnet epel-release ruby rubygems yum-plugins-priorities deltarpm
+sudo yum -y install https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
+
+sudo gem install lolcat
 
 # for tripleo-repos install:
 sudo yum -y install python-setuptools python-requests
@@ -45,6 +47,8 @@ sudo yum install -y \
   docker \
   docker-distribution \
   openvswitch \
+  openstack-tripleo-common \
+  openstack-tripleo-heat-templates \
   openstack-puppet-modules
 cd
 
@@ -175,6 +179,12 @@ tripleoupstream/centos-binary-mariadb:latest /bin/bash
 EOF_CAT
 chmod 755 $HOME/mysql_helper.sh
 
+if which lolcat &> /dev/null; then
+  cat=lolcat
+else
+  cat=cat
+fi
+
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy \\
 --templates=$HOME/tripleo-heat-templates \\
@@ -186,25 +196,10 @@ time sudo openstack undercloud deploy \\
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \\
 -e $HOME/custom.yaml \\
 -e $HOME/containers-rdo.yaml \\
--e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml
+-e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml \\
+| tee openstack_undercloud_deploy.out | $cat
 EOF_CAT
 chmod 755 $HOME/run.sh
-
-# TEMPORARY!!  This all needs to end up in tripleoclient.
-mkdir $HOME/playbooks
-
-hostname=`hostname -s`
-
-cat > $HOME/playbooks/inventory <<-EOF_CAT
-[targets]
-overcloud ansible_connection=local
-
-[Undercloud]
-overcloud
-
-[$hostname]
-overcloud
-EOF_CAT
 
 # The current state of the world is:
 #  - This one works and is being pushed to:
