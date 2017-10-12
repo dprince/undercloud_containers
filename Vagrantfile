@@ -67,6 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ## Provisioning
 
   #config.vm.provision "file", source: "", destination: "/etc/yum.repos.d/download.devel.redhat.com.repo"
+  config.vm.provision "file", source: "./undercloud.conf", destination: "$HOME/undercloud.conf"
 
   config.vm.provision "shell", inline: <<-SHELL
     yum update -y
