@@ -49,7 +49,8 @@ sudo yum install -y \
   openvswitch \
   openstack-tripleo-common \
   openstack-tripleo-heat-templates \
-  openstack-puppet-modules
+  openstack-puppet-modules \
+  openstack-heat-common # required until the Heat patch below lands
 cd
 
 sudo systemctl start openvswitch
@@ -92,18 +93,38 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git clone git://git.openstack.org/openstack/python-tripleoclient
   cd python-tripleoclient
 
-  # Make it so heat never exits
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
-  # Mount heat tmpfiles in a tmpfs filesystem
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/1 && git cherry-pick FETCH_HEAD
-  # Set the undercloud hostname:
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/18/508618/1 && git cherry-pick FETCH_HEAD
-  # Support to run ansible directly:
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/86/509586/1 && git cherry-pick FETCH_HEAD
+  # Use ansible to deploy undercloud.
+  # https://review.openstack.org/#/c/509586/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/86/509586/2 && git cherry-pick FETCH_HEAD
+
+  # Remove fake keystone
+  # https://review.openstack.org/509586
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/88/510288/3 && git cherry-pick FETCH_HEAD
+
+  # WIP: Mount a tmpfs filesystem for heat tmpfiles
+  # https://review.openstack.org/#/c/508558/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/3 && git cherry-pick FETCH_HEAD
+
+  # Make it so heat never exits (conflicts)
+  #git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
 fi
+
+# HEAT
+if [ ! -d $HOME/heat ]; then
+  git clone git://git.openstack.org/openstack/heat
+  cd heat
+
+  # Move FakeKeystoneClient to common
+  # https://review.openstack.org/#/c/512035/
+  git fetch https://git.openstack.org/openstack/heat refs/changes/35/512035/2 && git cherry-pick FETCH_HEAD
+
+  sudo python setup.py install
+  cd
+fi
+
 
 # TRIPLEO HEAT TEMPLATES
 if [ ! -d $HOME/tripleo-heat-templates ]; then
@@ -165,20 +186,6 @@ sudo rm -Rf /var/lib/heat-config/*
 EOF_CAT
 chmod 755 $HOME/cleanup.sh
 
-# use this guy to run ad-hoc mysql queries for troubleshooting
-cat > $HOME/mysql_helper.sh <<-EOF_CAT
-#!/usr/bin/env bash
-docker run -ti \
---user root \
---volume /var/lib/kolla/config_files/mysql.json:/var/lib/kolla/config_files/config.json \
---volume /var/lib/config-data/mysql/:/var/lib/kolla/config_files/src:ro \
---volume /var/lib/config-data/mysql/root:/root/:ro \
---volume /etc/hosts:/etc/hosts:ro \
---volume mariadb:/var/lib/mysql/ \
-tripleoupstream/centos-binary-mariadb:latest /bin/bash
-EOF_CAT
-chmod 755 $HOME/mysql_helper.sh
-
 if which lolcat &> /dev/null; then
   cat=lolcat
 else
@@ -188,6 +195,7 @@ fi
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy \\
 --templates=$HOME/tripleo-heat-templates \\
+--heat-native \\
 --local-ip=$LOCAL_IP \\
 --keep-running \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \\

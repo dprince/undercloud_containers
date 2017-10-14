@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
 set -eux
-#systemctl stop docker
-
-#cat > /etc/sysconfig/docker-storage <<-EOF_CAT
-#DOCKER_STORAGE_OPTIONS=-s overlay2
-#EOF_CAT
-#systemctl start docker
-
-#FIXME: copy in custom baremetal.yaml to disable iboot validations
-#cp /root/baremetal.yaml /usr/share/openstack-tripleo-common/workbooks/
 
 cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
@@ -40,30 +31,18 @@ parameter_defaults:
     zaqar::max_messages_post_size: 1048576
 EOF_CAT
 
-# use this guy to run ad-hoc mysql queries for troubleshooting
-cat > $HOME/mysql_helper.sh <<-"EOF_CAT"
-#!/usr/bin/env bash
-docker run -ti \
---user root \
---volume /var/lib/kolla/config_files/mysql.json:/var/lib/kolla/config_files/config.json \
---volume /var/lib/config-data/mysql/:/var/lib/kolla/config_files/src:ro \
---volume /var/lib/config-data/mysql/root:/root/:ro \
---volume /etc/hosts:/etc/hosts:ro \
---volume mariadb:/var/lib/mysql/ \
-172.19.0.2:8787/tripleoupstream/centos-binary-mariadb /bin/bash
-EOF_CAT
-chmod 755 $HOME/mysql_helper.sh
-
 cat > $HOME/run.sh <<-EOF_CAT
-time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
---local-ip=$LOCAL_IP \
---heat-container-image=172.19.0.2:8787/tripleoupstream/centos-binary-heat-all \
--e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
--e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
--e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
--e $HOME/tripleo-heat-templates/environments/docker.yaml \
--e $HOME/custom.yaml -e $HOME/containers.yaml \
--e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml
+time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \\
+--heat-native \\
+--local-ip=$LOCAL_IP \\
+--heat-container-image=172.19.0.2:8787/tripleoupstream/centos-binary-heat-all \\
+-e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \\
+-e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \\
+-e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \\
+-e $HOME/tripleo-heat-templates/environments/docker.yaml \\
+-e $HOME/custom.yaml -e $HOME/containers.yaml \\
+-e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml \\
+| tee openstack_undercloud_deploy.out | lolcat
 EOF_CAT
 #-e $HOME/tripleo-heat-templates/environments/puppet-pacemaker.yaml \
 chmod 755 $HOME/run.sh
