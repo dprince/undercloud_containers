@@ -132,9 +132,6 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
 
-  # Config download support for all deployment types:
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/27/505827/10 && git cherry-pick FETCH_HEAD
-
   # Name the post deployment so the ansible generator works:
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/51/508351/1 && git cherry-pick FETCH_HEAD
 
