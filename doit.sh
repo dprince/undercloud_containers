@@ -105,9 +105,6 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # https://review.openstack.org/#/c/508558/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/3 && git cherry-pick FETCH_HEAD
 
-  # Make it so heat never exits (conflicts)
-  #git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/19/508319/1 && git cherry-pick FETCH_HEAD
-
   # Don't install RPMs during undercloud install.  Now done here in doit.sh.
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/2 && git cherry-pick FETCH_HEAD
 
