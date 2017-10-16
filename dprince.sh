@@ -9,7 +9,7 @@ parameter_defaults:
   UndercloudNetworkGateway: 172.19.0.1
   UndercloudNameserver: 8.8.8.8
   IronicEnabledDrivers: ['pxe_iboot_iscsi']
-  #IronicAutomatedCleaning: false
+  IronicInspectorIpRange: '172.19.0.21,172.19.0.40'
   NeutronDhcpAgentsPerNetwork: 2
   NeutronWorkers: 3
   NeutronServicePlugins: ""

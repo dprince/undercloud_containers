@@ -95,11 +95,11 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Use ansible to deploy undercloud.
   # https://review.openstack.org/#/c/509586/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/86/509586/2 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/86/509586/4 && git cherry-pick FETCH_HEAD
 
   # Remove fake keystone
   # https://review.openstack.org/509586
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/88/510288/3 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/88/510288/5 && git cherry-pick FETCH_HEAD
 
   # WIP: Mount a tmpfs filesystem for heat tmpfiles
   # https://review.openstack.org/#/c/508558/
@@ -117,9 +117,9 @@ if [ ! -d $HOME/heat ]; then
   git clone git://git.openstack.org/openstack/heat
   cd heat
 
-  # Move FakeKeystoneClient to common
+  # Move FakeKeystoneClient to engine.clients
   # https://review.openstack.org/#/c/512035/
-  git fetch https://git.openstack.org/openstack/heat refs/changes/35/512035/2 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/heat refs/changes/35/512035/3 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -138,8 +138,14 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   # Name the post deployment so the ansible generator works:
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/51/508351/1 && git cherry-pick FETCH_HEAD
 
-  # our undercloud default nic should be eth1
+  # Our undercloud default nic should be eth1
+  # https://review.openstack.org/#/c/510212/
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/510212/2 && git cherry-pick FETCH_HEAD
+
+  # Add docker templates to configure Ironic inspector
+  # https://review.openstack.org/#/c/457822/40
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/40 && git cherry-pick FETCH_HEAD
+
 fi
 
 # os-net-config
@@ -199,6 +205,7 @@ time sudo openstack undercloud deploy \\
 --local-ip=$LOCAL_IP \\
 --keep-running \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \\
+-e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \\
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \\
