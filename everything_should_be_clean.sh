@@ -6,5 +6,5 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
 set -eux
     cd
-    sudo rm -rf custom.yaml heat-agents tripleo-common python-tripleoclient run.sh tripleo-heat-templates tripleo-undercloud-passwords.yaml
+    sudo rm -rf custom.yaml heat-agents heat os-net-config tripleo-common python-tripleoclient run.sh tripleo-heat-templates tripleo-undercloud-passwords.yaml
 fi
