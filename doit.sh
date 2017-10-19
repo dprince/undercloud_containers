@@ -99,7 +99,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Remove fake keystone
   # https://review.openstack.org/509588
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/88/510288/6 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/88/510288/8 && git cherry-pick FETCH_HEAD
 
   # WIP: Mount a tmpfs filesystem for heat tmpfiles
   # https://review.openstack.org/#/c/508558/
@@ -123,10 +123,9 @@ if [ ! -d $HOME/heat ]; then
   # https://review.openstack.org/#/c/512035/
   git fetch https://git.openstack.org/openstack/heat refs/changes/35/512035/3 && git cherry-pick FETCH_HEAD
 
-  # WIP: hack to disable is_service_available checks
-  # https://review.openstack.org/#/c/512646/
+  # https://review.openstack.org/#/c/513007/
   # https://bugs.launchpad.net/heat/+bug/1724263
-  git fetch https://git.openstack.org/openstack/heat refs/changes/46/512646/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/heat refs/changes/07/513007/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd

@@ -14,6 +14,7 @@ parameter_defaults:
   NeutronWorkers: 3
   NeutronServicePlugins: ""
 
+  DockerPuppetProcessCount: 6
   DockerNamespace: 172.19.0.2:8787/tripleoupstream
   DockerNamespaceIsRegistry: true
   Debug: true
@@ -37,6 +38,7 @@ time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \
 --local-ip=$LOCAL_IP \\
 --heat-container-image=172.19.0.2:8787/tripleoupstream/centos-binary-heat-all \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \\
+-e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \\
 -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \\
 -e $HOME/tripleo-heat-templates/environments/docker.yaml \\
