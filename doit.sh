@@ -82,7 +82,7 @@ if [ ! -d $HOME/tripleo-common ]; then
   git clone git://git.openstack.org/openstack/tripleo-common
   cd tripleo-common
   # config download support.  Checkout as it has deps.
-  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/89/508189/3 && git checkout FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/76/512876/2 && git checkout FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -98,7 +98,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/86/509586/4 && git cherry-pick FETCH_HEAD
 
   # Remove fake keystone
-  # https://review.openstack.org/509586
+  # https://review.openstack.org/509588
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/88/510288/6 && git cherry-pick FETCH_HEAD
 
   # WIP: Mount a tmpfs filesystem for heat tmpfiles
@@ -106,7 +106,9 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/3 && git cherry-pick FETCH_HEAD
 
   # Don't install RPMs during undercloud install.  Now done here in doit.sh.
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/2 && git cherry-pick FETCH_HEAD
+  # https://review.openstack.org/#/c/510239/
+  # FIXME this doesn't apply cleanly
+  # git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/2 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -137,13 +139,9 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
 
-  # Name the post deployment so the ansible generator works:
-  # https://review.openstack.org/#/c/508351/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/51/508351/2 && git cherry-pick FETCH_HEAD
-
   # Our undercloud default nic should be eth1
   # https://review.openstack.org/#/c/510212/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/510212/2 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/510212/3 && git cherry-pick FETCH_HEAD
 
   # Add docker templates to configure Ironic inspector
   # https://review.openstack.org/#/c/457822/40
@@ -158,6 +156,7 @@ if [ ! -d $HOME/os-net-config ]; then
   cd os-net-config
 
   # Allow dns_servers to be an empty array
+  # https://review.openstack.org/#/c/510207/
   git fetch https://git.openstack.org/openstack/os-net-config refs/changes/07/510207/1 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
@@ -201,6 +200,7 @@ else
   cat=cat
 fi
 
+# FIXME how to generate tripleo-heat-templates/environments/config-download-environment.yaml?
 cat > $HOME/run.sh <<-EOF_CAT
 time sudo openstack undercloud deploy \\
 --templates=$HOME/tripleo-heat-templates \\
@@ -233,4 +233,3 @@ set +x
 echo 'You will want to add "OS::TripleO::Undercloud::Net::SoftwareConfig: ../net-config-noop.yaml" to tripleo-heat-templates/environments/undercloud.yaml if you have a single nic.'
 
 echo 'The next step is to run ~/run.sh, which will create a heat deployment of your templates.'
-echo 'Once that completes, source the stackrc (in /root) and run ansible.sh to download and run the ansible playbooks.'
