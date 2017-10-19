@@ -210,6 +210,9 @@ time openstack undercloud install --experimental \\
 EOF_CAT
 chmod 755 $HOME/run.sh
 
+sed -i "s/@@LOCAL_IP@@/$LOCAL_IP/" $HOME/undercloud.conf
+sed -i "s#@@CONTAINERS_FILE@@#$HOME/containers.yaml#" $HOME/undercloud.conf
+
 # The current state of the world is:
 #  - This one works and is being pushed to:
 #openstack overcloud container image prepare --tag tripleo-ci-testing --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
