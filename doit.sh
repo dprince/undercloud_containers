@@ -111,7 +111,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/2 && git cherry-pick FETCH_HEAD
 
   # Support for undercloud install
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/8 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/10 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -133,7 +133,6 @@ if [ ! -d $HOME/heat ]; then
   sudo python setup.py install
   cd
 fi
-
 
 # TRIPLEO HEAT TEMPLATES
 if [ ! -d $HOME/tripleo-heat-templates ]; then

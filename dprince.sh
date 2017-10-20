@@ -3,17 +3,6 @@ set -eux
 
 cat > $HOME/custom.yaml <<-EOF_CAT
 parameter_defaults:
-  UndercloudDhcpRangeStart: 172.19.0.4
-  UndercloudDhcpRangeEnd: 172.19.0.20
-  UndercloudNetworkCidr: 172.19.0.0/24
-  UndercloudNetworkGateway: 172.19.0.1
-  UndercloudNameserver: 8.8.8.8
-  IronicEnabledDrivers: ['pxe_iboot_iscsi']
-  IronicInspectorIpRange: '172.19.0.21,172.19.0.40'
-  NeutronDhcpAgentsPerNetwork: 2
-  NeutronWorkers: 3
-  NeutronServicePlugins: ""
-
   DockerPuppetProcessCount: 6
   DockerNamespace: 172.19.0.2:8787/tripleoupstream
   DockerNamespaceIsRegistry: true
@@ -32,21 +21,23 @@ parameter_defaults:
     zaqar::max_messages_post_size: 1048576
 EOF_CAT
 
-cat > $HOME/run.sh <<-EOF_CAT
-time sudo openstack undercloud deploy --templates=$HOME/tripleo-heat-templates \\
---heat-native \\
---local-ip=$LOCAL_IP \\
---heat-container-image=172.19.0.2:8787/tripleoupstream/centos-binary-heat-all \\
--e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \\
--e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \\
--e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \\
--e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \\
--e $HOME/tripleo-heat-templates/environments/docker.yaml \\
--e $HOME/custom.yaml -e $HOME/containers.yaml \\
--e $HOME/tripleo-heat-templates/environments/config-download-environment.yaml \\
-| tee openstack_undercloud_deploy.out | lolcat
+cat > $HOME/undercloud.conf <<-EOF_CAT
+[DEFAULT]
+heat_native=true
+local_ip=$LOCAL_IP
+heat_container_image=172.19.0.2:8787/tripleoupstream/centos-binary-heat-all
+undercloud_nameservers = 8.8.8.8
+network_gateway = 172.19.0.1
+network_cidr = 172.19.0.0/24
+dhcp_start = 172.19.0.4
+dhcp_end = 172.19.0.20
+inspection_iprange=172.19.0.21,172.19.0.40
+enabled_drivers=pxe_iboot_iscsi
+enable_ironic=true
+enable_zaqar=true
+enable_mistral=true
+custom_env_files=/root/containers.yaml
 EOF_CAT
-#-e $HOME/tripleo-heat-templates/environments/puppet-pacemaker.yaml \
 chmod 755 $HOME/run.sh
 
 openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
