@@ -77,17 +77,6 @@ fi
 cd
 sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
-# TRIPLEO-COMMON
-if [ ! -d $HOME/tripleo-common ]; then
-  git clone git://git.openstack.org/openstack/tripleo-common
-  cd tripleo-common
-  # config download support.  Checkout as it has deps.
-  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/76/512876/2 && git checkout FETCH_HEAD
-
-  sudo python setup.py install
-  cd
-fi
-
 # PYTHON TRIPLEOCLIENT
 if [ ! -d $HOME/python-tripleoclient ]; then
   git clone git://git.openstack.org/openstack/python-tripleoclient
