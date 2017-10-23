@@ -198,6 +198,9 @@ time openstack undercloud install --experimental \\
 EOF_CAT
 chmod 755 $HOME/run.sh
 
+if [ ! -f $HOME/undercloud.conf ]; then
+    cp $(dirname "${BASH_SOURCE[0]}")/undercloud.conf $HOME/undercloud.conf
+fi
 sed -i "s/@@LOCAL_IP@@/$LOCAL_IP/" $HOME/undercloud.conf
 sed -i "s#@@CONTAINERS_FILE@@#$HOME/containers.yaml#" $HOME/undercloud.conf
 
