@@ -99,7 +99,10 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/3 && git cherry-pick FETCH_HEAD
 
   # Support for undercloud install
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/12 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/15 && git cherry-pick FETCH_HEAD
+
+  # Validations on undercloud.conf
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/3 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
