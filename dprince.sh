@@ -34,9 +34,10 @@ dhcp_end = 172.19.0.20
 inspection_iprange=172.19.0.21,172.19.0.40
 enabled_drivers=pxe_iboot_iscsi
 enable_ironic=true
+enable_ironic_inspector=true
 enable_zaqar=true
 enable_mistral=true
-custom_env_files=/root/containers.yaml
+custom_env_files=/home/stack/containers.yaml,/home/stack/custom.yaml
 EOF_CAT
 chmod 755 $HOME/run.sh
 

@@ -17,6 +17,11 @@ ssh root@${SEED_IP} <<EOF_SSH
 echo "undercloud.localdomain" > /etc/hostname
 echo "127.0.0.1  undercloud undercloud.localdomain" >> /etc/hosts
 hostname undercloud
+useradd stack
+cat >> /etc/sudoers <<EOF_CAT
+stack ALL=(ALL) NOPASSWD:ALL
+EOF_CAT
+su -l stack
 LOCAL_IP=172.19.0.3
 LOCAL_REGISTRY="172.19.0.2:8787"
 $(cat doit.sh)

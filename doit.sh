@@ -94,13 +94,12 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # https://review.openstack.org/#/c/508558/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/3 && git cherry-pick FETCH_HEAD
 
-  # Don't install RPMs during undercloud install.  Now done here in doit.sh.
-  # https://review.openstack.org/#/c/510239/
-  # FIXME this doesn't apply cleanly
-  # git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/2 && git cherry-pick FETCH_HEAD
+  # Don't install RPMs during undercloud deploy.
+  #https://review.openstack.org/#/c/510239/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/3 && git cherry-pick FETCH_HEAD
 
   # Support for undercloud install
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/10 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/12 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -113,8 +112,9 @@ if [ ! -d $HOME/heat ]; then
 
   # Move FakeKeystoneClient to engine.clients
   # https://review.openstack.org/#/c/512035/
-  git fetch https://git.openstack.org/openstack/heat refs/changes/35/512035/3 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/heat refs/changes/35/512035/4 && git cherry-pick FETCH_HEAD
 
+  # Move FakeKeystoneClient to engine.clients
   # https://review.openstack.org/#/c/513007/
   # https://bugs.launchpad.net/heat/+bug/1724263
   git fetch https://git.openstack.org/openstack/heat refs/changes/07/513007/1 && git cherry-pick FETCH_HEAD
@@ -198,8 +198,16 @@ time openstack undercloud install --experimental \\
 EOF_CAT
 chmod 755 $HOME/run.sh
 
-sed -i "s/@@LOCAL_IP@@/$LOCAL_IP/" $HOME/undercloud.conf
-sed -i "s#@@CONTAINERS_FILE@@#$HOME/containers.yaml#" $HOME/undercloud.conf
+cat > $HOME/undercloud.conf <<-EOF_CAT
+[DEFAULT]
+heat_native=true
+local_ip=$LOCAL_IP
+enable_ironic=true
+enable_ironic_inspector=true
+enable_zaqar=true
+enable_mistral=true
+custom_env_files=$HOME/containers.yaml
+EOF_CAT
 
 # The current state of the world is:
 #  - This one works and is being pushed to:
