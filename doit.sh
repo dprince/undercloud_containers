@@ -105,6 +105,18 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   cd
 fi
 
+# TRIPLEO-COMMON
+if [ ! -d $HOME/tripleo-common ]; then
+  git clone git://git.openstack.org/openstack/tripleo-common
+  cd tripleo-common
+
+  # Add missing IronicInspector service
+  # https://review.openstack.org/#/c/514759/
+  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/59/514759/1 && git cherry-pick FETCH_HEAD
+
+  cd
+fi
+
 # HEAT
 if [ ! -d $HOME/heat ]; then
   git clone git://git.openstack.org/openstack/heat
@@ -217,8 +229,18 @@ EOF_CAT
 #  - This one works:
 openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
 
-openstack overcloud container image prepare --tag passed-ci --namespace tripleopike --env-file $HOME/containers-rdo.yaml
 # Note that there is a tripleo-ci-testing tag in dockerhub but it's not being updated.
+openstack overcloud container image prepare \
+  --tag passed-ci \
+  --namespace docker.io/tripleopike \
+  --output-env-file=$HOME/containers-rdo.yaml \
+  --template-file $HOME/containers-rdo.yaml
+  -r tripleo-heat-templates/roles_data_undercloud.yaml \
+  -e tripleo-heat-templates/environments/docker.yaml \
+  -e tripleo-heat-templates/environments/services-docker/mistral.yaml \
+  -e tripleo-heat-templates/environments/services-docker/ironic.yaml \
+  -e tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \
+  -e tripleo-heat-templates/environments/services-docker/zaqar.yaml
 
 set +x
 
