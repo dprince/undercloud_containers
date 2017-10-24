@@ -99,10 +99,10 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/3 && git cherry-pick FETCH_HEAD
 
   # Support for undercloud install
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/17 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/19 && git cherry-pick FETCH_HEAD
 
   # Validations on undercloud.conf
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/3 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/4 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -186,6 +186,7 @@ EOF_CAT
 fi
 
 LOCAL_IP=${LOCAL_IP:-`/usr/sbin/ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
+LOCAL_INTERFACE=${LOCAL_INTERFACE:-`route -n | grep "^0.0.0.0" | tr -s ' ' | cut -d ' ' -f 8`}
 
 # run this to cleanup containers and volumes between iterations
 cat > $HOME/cleanup.sh <<-EOF_CAT
@@ -214,10 +215,12 @@ time openstack undercloud install --experimental \\
 EOF_CAT
 chmod 755 $HOME/run.sh
 
+# FIXME: It's probably not always /8
 cat > $HOME/undercloud.conf <<-EOF_CAT
 [DEFAULT]
 heat_native=true
-local_ip=$LOCAL_IP
+local_ip=$LOCAL_IP/8
+local_interface=$LOCAL_INTERFACE
 enable_ironic=true
 enable_ironic_inspector=true
 enable_zaqar=true
