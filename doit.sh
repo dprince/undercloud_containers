@@ -114,6 +114,7 @@ if [ ! -d $HOME/tripleo-common ]; then
   # https://review.openstack.org/#/c/514759/
   git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/59/514759/1 && git cherry-pick FETCH_HEAD
 
+  sudo python setup.py install
   cd
 fi
 
