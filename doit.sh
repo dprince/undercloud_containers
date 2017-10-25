@@ -242,12 +242,12 @@ openstack overcloud container image prepare \
   --namespace docker.io/tripleopike \
   --output-env-file=$HOME/containers-rdo.yaml \
   --template-file $HOME/tripleo-common/container-images/overcloud_containers.yaml.j2 \
-  -r tripleo-heat-templates/roles_data_undercloud.yaml \
-  -e tripleo-heat-templates/environments/docker.yaml \
-  -e tripleo-heat-templates/environments/services-docker/mistral.yaml \
-  -e tripleo-heat-templates/environments/services-docker/ironic.yaml \
-  -e tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \
-  -e tripleo-heat-templates/environments/services-docker/zaqar.yaml
+  -r $HOME/tripleo-heat-templates/roles_data_undercloud.yaml \
+  -e $HOME/tripleo-heat-templates/environments/docker.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml
 
 set +x
 
