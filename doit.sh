@@ -225,7 +225,7 @@ enable_ironic=true
 enable_ironic_inspector=true
 enable_zaqar=true
 enable_mistral=true
-custom_env_files=$HOME/containers.yaml
+custom_env_files=$HOME/containers-rdo.yaml
 EOF_CAT
 
 # The current state of the world is:
