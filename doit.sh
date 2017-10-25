@@ -240,8 +240,8 @@ openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleou
 openstack overcloud container image prepare \
   --tag passed-ci \
   --namespace docker.io/tripleopike \
-  --output-env-file=$HOME/containers-rdo.yaml \
-  --template-file $HOME/containers-rdo.yaml
+  --output-env-file=$HOME/containers.yaml \
+  --template-file $HOME/containers.yaml \
   -r tripleo-heat-templates/roles_data_undercloud.yaml \
   -e tripleo-heat-templates/environments/docker.yaml \
   -e tripleo-heat-templates/environments/services-docker/mistral.yaml \
