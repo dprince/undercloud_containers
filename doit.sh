@@ -145,10 +145,6 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
 
-  # Our undercloud default nic should be eth1
-  # https://review.openstack.org/#/c/510212/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/12/510212/3 && git cherry-pick FETCH_HEAD
-
   # Add docker templates to configure Ironic inspector
   # https://review.openstack.org/#/c/457822/40
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/40 && git cherry-pick FETCH_HEAD
