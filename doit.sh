@@ -182,7 +182,7 @@ EOF_CAT
 fi
 
 LOCAL_IP=${LOCAL_IP:-`/usr/sbin/ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
-LOCAL_INTERFACE=${LOCAL_INTERFACE:-`route -n | grep "^0.0.0.0" | tr -s ' ' | cut -d ' ' -f 8`}
+LOCAL_INTERFACE=${LOCAL_INTERFACE:-`route -n | grep "^0.0.0.0" | tr -s ' ' | cut -d ' ' -f 8 | head -n 1`}
 
 # run this to cleanup containers and volumes between iterations
 cat > $HOME/cleanup.sh <<-EOF_CAT
