@@ -99,7 +99,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/39/510239/3 && git cherry-pick FETCH_HEAD
 
   # Support for undercloud install
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/19 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/24 && git cherry-pick FETCH_HEAD
 
   # Validations on undercloud.conf
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/4 && git cherry-pick FETCH_HEAD
@@ -210,7 +210,7 @@ fi
 # FIXME how to generate tripleo-heat-templates/environments/config-download-environment.yaml?
 cat > $HOME/run.sh <<-EOF_CAT
 export THT_HOME=$HOME/tripleo-heat-templates
-time openstack undercloud install --experimental \\
+time openstack undercloud install --use-heat \\
 | tee openstack_undercloud_deploy.out | $cat
 EOF_CAT
 chmod 755 $HOME/run.sh
