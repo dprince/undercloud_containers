@@ -149,6 +149,10 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   # https://review.openstack.org/#/c/457822/40
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/40 && git cherry-pick FETCH_HEAD
 
+  # Increase the size of the Mistral output limit
+  # https://review.openstack.org/#/c/516771/
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/71/516771/1 && git cherry-pick FETCH_HEAD
+
 fi
 
 # os-net-config
