@@ -16,7 +16,7 @@ if [[ "$USER" == 'dprince' ]]; then
 ssh root@${SEED_IP} <<EOF_SSH
 echo "undercloud.localdomain" > /etc/hostname
 echo "127.0.0.1  undercloud undercloud.localdomain" >> /etc/hosts
-hostname undercloud
+hostname undercloud.localdomain
 useradd stack
 cat >> /etc/sudoers <<EOF_CAT
 stack ALL=(ALL) NOPASSWD:ALL

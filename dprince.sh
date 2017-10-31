@@ -24,7 +24,7 @@ EOF_CAT
 cat > $HOME/undercloud.conf <<-EOF_CAT
 [DEFAULT]
 heat_native=true
-local_ip=$LOCAL_IP
+local_ip=$LOCAL_IP/24
 heat_container_image=172.19.0.2:8787/tripleoupstream/centos-binary-heat-all
 undercloud_nameservers = 8.8.8.8
 network_gateway = 172.19.0.1
