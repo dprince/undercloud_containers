@@ -230,7 +230,7 @@ EOF_CAT
 openstack overcloud container image prepare \
   --tag tripleo-ci-testing \
   --namespace trunk.registry.rdoproject.org/master \
-  --output-env-file=$HOME/containers-rdo.yaml \
+  --output-env-file=$HOME/containers.yaml \
   --template-file $HOME/tripleo-common/container-images/overcloud_containers.yaml.j2 \
   -r $HOME/tripleo-heat-templates/roles_data_undercloud.yaml \
   -e $HOME/tripleo-heat-templates/environments/docker.yaml \
