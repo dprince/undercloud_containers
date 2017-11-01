@@ -225,12 +225,11 @@ EOF_CAT
 #  - This one doesn't work but it should (apparently auth issues):
 #openstack overcloud container image prepare --tag passed-ci --namespace trunk.registry.rdoproject.org/master --env-file $HOME/containers-rdo.yaml
 #  - This one works:
-openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
+#openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
 
-# Note that there is a tripleo-ci-testing tag in dockerhub but it's not being updated.
 openstack overcloud container image prepare \
-  --tag passed-ci \
-  --namespace docker.io/tripleopike \
+  --tag tripleo-ci-testing \
+  --namespace trunk.registry.rdoproject.org/master \
   --output-env-file=$HOME/containers-rdo.yaml \
   --template-file $HOME/tripleo-common/container-images/overcloud_containers.yaml.j2 \
   -r $HOME/tripleo-heat-templates/roles_data_undercloud.yaml \
