@@ -83,7 +83,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   cd python-tripleoclient
 
   # Use ansible for undercloud deploy, remove fake keystone.
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/67/515967/6 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/67/515967/9 && git cherry-pick FETCH_HEAD
 
   # WIP: Mount a tmpfs filesystem for heat tmpfiles
   # https://review.openstack.org/#/c/508558/
