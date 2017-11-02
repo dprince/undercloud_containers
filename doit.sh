@@ -50,7 +50,7 @@ sudo yum install -y \
   openstack-tripleo-common \
   openstack-tripleo-heat-templates \
   openstack-puppet-modules \
-  openstack-heat-common # required until the Heat patch below lands
+  openstack-heat-monolith #required as we now use --heat-native
 cd
 
 sudo systemctl start openvswitch
@@ -112,20 +112,6 @@ if [ ! -d $HOME/tripleo-common ]; then
   cd
 fi
 
-# HEAT
-if [ ! -d $HOME/heat ]; then
-  git clone git://git.openstack.org/openstack/heat
-  cd heat
-
-  # Move FakeKeystoneClient to engine.clients
-  # https://review.openstack.org/#/c/513007/
-  # https://bugs.launchpad.net/heat/+bug/1724263
-  git fetch https://git.openstack.org/openstack/heat refs/changes/07/513007/1 && git cherry-pick FETCH_HEAD
-
-  sudo python setup.py install
-  cd
-fi
-
 # TRIPLEO HEAT TEMPLATES
 if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
@@ -143,20 +129,6 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   # Increase the size of the Mistral output limit
   # https://review.openstack.org/#/c/516771/
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/71/516771/1 && git cherry-pick FETCH_HEAD
-
-fi
-
-# os-net-config
-if [ ! -d $HOME/os-net-config ]; then
-  cd
-  git clone git://git.openstack.org/openstack/os-net-config
-  cd os-net-config
-
-  # Allow dns_servers to be an empty array
-  # https://review.openstack.org/#/c/510207/
-  git fetch https://git.openstack.org/openstack/os-net-config refs/changes/07/510207/1 && git cherry-pick FETCH_HEAD
-
-  sudo python setup.py install
 
 fi
 
