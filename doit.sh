@@ -82,15 +82,9 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git clone git://git.openstack.org/openstack/python-tripleoclient
   cd python-tripleoclient
 
-  # Use ansible for undercloud deploy, remove fake keystone.
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/67/515967/9 && git cherry-pick FETCH_HEAD
-
-  # WIP: Mount a tmpfs filesystem for heat tmpfiles
+  # tmpfs filesystem for temp files.
   # https://review.openstack.org/#/c/508558/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/3 && git cherry-pick FETCH_HEAD
-
-  # Support for undercloud install
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/50/511350/24 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/6 && git cherry-pick FETCH_HEAD
 
   # Validations on undercloud.conf
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/4 && git cherry-pick FETCH_HEAD
@@ -100,31 +94,19 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 fi
 
 # TRIPLEO-COMMON
-if [ ! -d $HOME/tripleo-common ]; then
-  git clone git://git.openstack.org/openstack/tripleo-common
-  cd tripleo-common
-
-  # Add missing IronicInspector service
-  # https://review.openstack.org/#/c/514759/
-  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/59/514759/1 && git cherry-pick FETCH_HEAD
-
-  sudo python setup.py install
-  cd
-fi
+#if [ ! -d $HOME/tripleo-common ]; then
+#  git clone git://git.openstack.org/openstack/tripleo-common
+#  cd tripleo-common
+#
+#  sudo python setup.py install
+#  cd
+#fi
 
 # TRIPLEO HEAT TEMPLATES
 if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
-
-  # docker: Run mistral-db-manage populate at step 5
-  # https://review.openstack.org/#/c/516418/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/18/516418/1 && git cherry-pick FETCH_HEAD
-
-  # Add docker templates to configure Ironic inspector
-  # https://review.openstack.org/#/c/457822/40
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/22/457822/40 && git cherry-pick FETCH_HEAD
 
   # Increase the size of the Mistral output limit
   # https://review.openstack.org/#/c/516771/
