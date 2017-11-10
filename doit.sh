@@ -94,13 +94,13 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 fi
 
 # TRIPLEO-COMMON
-#if [ ! -d $HOME/tripleo-common ]; then
-#  git clone git://git.openstack.org/openstack/tripleo-common
-#  cd tripleo-common
-#
-#  sudo python setup.py install
-#  cd
-#fi
+if [ ! -d $HOME/tripleo-common ]; then
+  git clone git://git.openstack.org/openstack/tripleo-common
+  cd tripleo-common
+
+  sudo python setup.py install
+  cd
+fi
 
 # TRIPLEO HEAT TEMPLATES
 if [ ! -d $HOME/tripleo-heat-templates ]; then
