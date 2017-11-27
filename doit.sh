@@ -84,10 +84,10 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # tmpfs filesystem for temp files.
   # https://review.openstack.org/#/c/508558/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/6 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/11 && git cherry-pick FETCH_HEAD
 
   # Validations on undercloud.conf
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/4 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/13 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -107,11 +107,6 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
-
-  # Increase the size of the Mistral output limit
-  # https://review.openstack.org/#/c/516771/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/71/516771/1 && git cherry-pick FETCH_HEAD
-
 fi
 
 # this is how you inject an admin password
@@ -131,6 +126,8 @@ EOF_CAT
 fi
 
 LOCAL_IP=${LOCAL_IP:-`/usr/sbin/ip -4 route get 8.8.8.8 | awk {'print $7'} | tr -d '\n'`}
+DEFAULT_ROUTE=${DEFAULT_ROUTE:-`/usr/sbin/ip -4 route get 8.8.8.8 | awk {'print $3'} | tr -d '\n'`}
+NETWORK_CIDR=${NETWORK_CIDR:-`echo $DEFAULT_ROUTE/16`}
 LOCAL_INTERFACE=${LOCAL_INTERFACE:-`route -n | grep "^0.0.0.0" | tr -s ' ' | cut -d ' ' -f 8 | head -n 1`}
 
 # run this to cleanup containers and volumes between iterations
@@ -166,6 +163,8 @@ cat > $HOME/undercloud.conf <<-EOF_CAT
 heat_native=true
 local_ip=$LOCAL_IP/8
 local_interface=$LOCAL_INTERFACE
+network_cidr=$NETWORK_CIDR
+network_gateway=$DEFAULT_ROUTE
 enable_ironic=true
 enable_ironic_inspector=true
 enable_zaqar=true
