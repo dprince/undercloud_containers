@@ -89,6 +89,9 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # Validations on undercloud.conf
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/13 && git cherry-pick FETCH_HEAD
 
+  # Set output dir to the users home:
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/1 && git cherry-pick FETCH_HEAD
+
   sudo python setup.py install
   cd
 fi
