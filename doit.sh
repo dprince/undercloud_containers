@@ -82,15 +82,8 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git clone git://git.openstack.org/openstack/python-tripleoclient
   cd python-tripleoclient
 
-  # tmpfs filesystem for temp files.
-  # https://review.openstack.org/#/c/508558/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/58/508558/11 && git cherry-pick FETCH_HEAD
-
-  # Validations on undercloud.conf
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/56/513856/13 && git cherry-pick FETCH_HEAD
-
   # Set output dir to the users home:
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/9 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -109,7 +102,13 @@ fi
 if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
+
   cd tripleo-heat-templates
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/8 && git cherry-pick FETCH_HEAD
+
+  # Add UndercloudHomeDir param:
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/8 && git cherry-pick FETCH_HEAD 
+  cd
 fi
 
 # this is how you inject an admin password
