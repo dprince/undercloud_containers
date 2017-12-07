@@ -112,7 +112,7 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # Add UndercloudHomeDir param:
   # https://review.openstack.org/#/c/524408
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/8 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/9 && git cherry-pick FETCH_HEAD
 
   # Add DockerRegistryMirror parameter
   # https://review.openstack.org/#/c/525764/
