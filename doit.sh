@@ -88,7 +88,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Configure undercloud docker registry/mirror
   # https://review.openstack.org/#/c/526147/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/2 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/3 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
