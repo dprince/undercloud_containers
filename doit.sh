@@ -137,7 +137,7 @@ if [ ! -d $HOME/puppet-tripleo ]; then
 
   # https://review.openstack.org/#/c/525761/
   # Remove INSECURE_REGISTRY from docker_registry.pp
-  sudo git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/61/525761/3 && git cherry-pick FETCH_HEAD
+  sudo git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/61/525761/4 && git cherry-pick FETCH_HEAD
 
   cd /usr/share/openstack-puppet/modules
   sudo rm -Rf tripleo
