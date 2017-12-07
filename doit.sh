@@ -122,6 +122,10 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   # https://review.openstack.org/#/c/526132/
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/1 && git cherry-pick FETCH_HEAD
 
+  # Add tls roles for undercloud
+  # https://review.openstack.org/#/c/517079/
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/7 && git cherry-pick FETCH_HEAD
+
   cd
 fi
 
