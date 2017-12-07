@@ -82,8 +82,13 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   git clone git://git.openstack.org/openstack/python-tripleoclient
   cd python-tripleoclient
 
-  # Set output dir to the users home:
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/9 && git cherry-pick FETCH_HEAD
+  # Generate undercloud-passwords.conf and fix output dir.
+  # https://review.openstack.org/#/c/523511/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/10 && git cherry-pick FETCH_HEAD
+
+  # Configure undercloud docker registry/mirror
+  # https://review.openstack.org/#/c/526147/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/2 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -104,11 +109,35 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
 
   cd tripleo-heat-templates
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/8 && git cherry-pick FETCH_HEAD
 
   # Add UndercloudHomeDir param:
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/8 && git cherry-pick FETCH_HEAD 
+  # https://review.openstack.org/#/c/524408
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/8 && git cherry-pick FETCH_HEAD
+
+  # Add DockerRegistryMirror parameter
+  # https://review.openstack.org/#/c/525764/
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/64/525764/2 && git cherry-pick FETCH_HEAD
+
+  # Add docker-registry service
+  # https://review.openstack.org/#/c/526132/
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/1 && git cherry-pick FETCH_HEAD
+
   cd
+fi
+
+# Puppet TripleO
+if [ ! -d $HOME/puppet-tripleo ]; then
+  cd
+  git clone git://git.openstack.org/openstack/puppet-tripleo
+  cd puppet-tripleo
+
+  # https://review.openstack.org/#/c/525761/
+  # Remove INSECURE_REGISTRY from docker_registry.pp
+  sudo git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/61/525761/3 && git cherry-pick FETCH_HEAD
+
+  cd /usr/share/openstack-puppet/modules
+  sudo rm -Rf tripleo
+  sudo cp -a $HOME/puppet-tripleo tripleo
 fi
 
 # this is how you inject an admin password
