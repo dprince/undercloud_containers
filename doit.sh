@@ -88,7 +88,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Configure undercloud docker registry/mirror
   # https://review.openstack.org/#/c/526147/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/3 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/4 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -120,7 +120,7 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # Add docker-registry service
   # https://review.openstack.org/#/c/526132/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/2 && git cherry-pick FETCH_HEAD
 
   # Add tls roles for undercloud
   # https://review.openstack.org/#/c/517079/
@@ -137,7 +137,7 @@ if [ ! -d $HOME/puppet-tripleo ]; then
 
   # https://review.openstack.org/#/c/525761/
   # Remove INSECURE_REGISTRY from docker_registry.pp
-  sudo git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/61/525761/4 && git cherry-pick FETCH_HEAD
+  sudo git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/61/525761/5 && git cherry-pick FETCH_HEAD
 
   cd /usr/share/openstack-puppet/modules
   sudo rm -Rf tripleo
