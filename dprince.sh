@@ -38,11 +38,20 @@ enable_ironic_inspector=true
 enable_zaqar=true
 enable_mistral=true
 custom_env_files=/home/stack/containers.yaml,/home/stack/custom.yaml
+dhcp_start=172.19.0.200
+dhcp_end=172.19.0.205
+docker_insecure_registries=172.19.0.2:8787
 EOF_CAT
 chmod 755 $HOME/run.sh
 
-openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
+#openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
 #overcloud container image prepare --namespace=trunk.registry.rdoproject.org/tripleo --env-file=/root/rdo.yaml
+openstack overcloud container image prepare \
+  --tag tripleo-ci-testing \
+  --namespace 172.19.0.2:8787/master \
+  --output-env-file=$HOME/containers.yaml \
+  --template-file $HOME/tripleo-common/container-images/overcloud_containers.yaml.j2 \
+  -r $HOME/tripleo-heat-templates/roles_data_undercloud.yaml
 
 # Redirect console for AMT ttyS1 (dprince uses amtterm this way)
 #sed -e 's|text|text console=ttyS1,115200|' -i /usr/lib/python2.7/site-packages/ironic/drivers/modules/ipxe_config.template

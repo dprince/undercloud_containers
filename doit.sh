@@ -90,6 +90,18 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # https://review.openstack.org/#/c/526147/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/4 && git cherry-pick FETCH_HEAD
 
+  # Undercloud: wire in scheduler_max_attempts
+  # https://review.openstack.org/#/c/526584/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/84/526584/1 && git cherry-pick FETCH_HEAD
+
+  # undercloud_deploy: add opts to setup virtual-ips
+  # https://review.openstack.org/#/c/526879/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/79/526879/2 && git cherry-pick FETCH_HEAD
+
+  # undercloud_config: setup VIPs, haproxy, etc
+  # https://review.openstack.org/#/c/526881/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/81/526881/1 && git cherry-pick FETCH_HEAD
+
   sudo python setup.py install
   cd
 fi
@@ -114,17 +126,17 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   # https://review.openstack.org/#/c/524408
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/9 && git cherry-pick FETCH_HEAD
 
-  # Add DockerRegistryMirror parameter
-  # https://review.openstack.org/#/c/525764/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/64/525764/2 && git cherry-pick FETCH_HEAD
-
   # Add docker-registry service
   # https://review.openstack.org/#/c/526132/
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/2 && git cherry-pick FETCH_HEAD
 
   # Add tls roles for undercloud
   # https://review.openstack.org/#/c/517079/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/7 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/8 && git cherry-pick FETCH_HEAD
+
+  # Add NovaSchedulerMaxAttempts parameter
+  # https://review.openstack.org/#/c/526582/
+git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/82/526582/1 && git cherry-pick FETCH_HEAD
 
   cd
 fi
