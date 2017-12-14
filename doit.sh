@@ -84,11 +84,11 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Generate undercloud-passwords.conf and fix output dir.
   # https://review.openstack.org/#/c/523511/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/10 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/11 && git cherry-pick FETCH_HEAD
 
   # Configure undercloud docker registry/mirror
   # https://review.openstack.org/#/c/526147/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/4 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/5 && git cherry-pick FETCH_HEAD
 
   # Undercloud: wire in scheduler_max_attempts
   # https://review.openstack.org/#/c/526584/
@@ -100,7 +100,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # undercloud_config: setup VIPs, haproxy, etc
   # https://review.openstack.org/#/c/526881/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/81/526881/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/81/526881/2 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -122,13 +122,9 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   cd tripleo-heat-templates
 
-  # Add UndercloudHomeDir param:
-  # https://review.openstack.org/#/c/524408
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/524408/9 && git cherry-pick FETCH_HEAD
-
   # Add docker-registry service
   # https://review.openstack.org/#/c/526132/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/2 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/3 && git cherry-pick FETCH_HEAD
 
   # Add tls roles for undercloud
   # https://review.openstack.org/#/c/517079/
@@ -136,25 +132,25 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # Add NovaSchedulerMaxAttempts parameter
   # https://review.openstack.org/#/c/526582/
-git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/82/526582/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/82/526582/1 && git cherry-pick FETCH_HEAD
+
+  # tripleo ui docker
+  # https://review.openstack.org/#/c/515490/
+  # git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/1 && git cherry-pick FETCH_HEAD
 
   cd
 fi
 
 # Puppet TripleO
-if [ ! -d $HOME/puppet-tripleo ]; then
-  cd
-  git clone git://git.openstack.org/openstack/puppet-tripleo
-  cd puppet-tripleo
+# if [ ! -d $HOME/puppet-tripleo ]; then
+#   cd
+#   git clone git://git.openstack.org/openstack/puppet-tripleo
+#   cd puppet-tripleo
 
-  # https://review.openstack.org/#/c/525761/
-  # Remove INSECURE_REGISTRY from docker_registry.pp
-  sudo git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/61/525761/5 && git cherry-pick FETCH_HEAD
-
-  cd /usr/share/openstack-puppet/modules
-  sudo rm -Rf tripleo
-  sudo cp -a $HOME/puppet-tripleo tripleo
-fi
+#   cd /usr/share/openstack-puppet/modules
+#   sudo rm -Rf tripleo
+#   sudo cp -a $HOME/puppet-tripleo tripleo
+# fi
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
