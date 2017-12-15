@@ -102,6 +102,10 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # https://review.openstack.org/#/c/526881/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/81/526881/2 && git cherry-pick FETCH_HEAD
 
+  # Add tripleo-ui docker service to undercloud config
+  # https://review.openstack.org/#/c/522842/
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/42/522842/1 && git cherry-pick FETCH_HEAD
+
   sudo python setup.py install
   cd
 fi
@@ -110,6 +114,10 @@ fi
 if [ ! -d $HOME/tripleo-common ]; then
   git clone git://git.openstack.org/openstack/tripleo-common
   cd tripleo-common
+
+  # Add tripleo-ui container
+  # https://review.openstack.org/#/c/515407/
+  git fetch https://git.openstack.org/openstack/tripleo-common refs/changes/07/515407/2 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
   cd
@@ -136,7 +144,7 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # tripleo ui docker
   # https://review.openstack.org/#/c/515490/
-  # git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/1 && git cherry-pick FETCH_HEAD
 
   cd
 fi
@@ -204,7 +212,7 @@ chmod 755 $HOME/run.sh
 cat > $HOME/undercloud.conf <<-EOF_CAT
 [DEFAULT]
 heat_native=true
-local_ip=$LOCAL_IP/8
+local_ip=$LOCAL_IP/24
 local_interface=$LOCAL_INTERFACE
 network_cidr=$NETWORK_CIDR
 network_gateway=$DEFAULT_ROUTE
@@ -212,6 +220,7 @@ enable_ironic=true
 enable_ironic_inspector=true
 enable_zaqar=true
 enable_mistral=true
+enable_ui=true
 custom_env_files=$HOME/containers.yaml
 EOF_CAT
 
@@ -224,8 +233,8 @@ EOF_CAT
 #openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
 
 openstack overcloud container image prepare \
-  --tag tripleo-ci-testing \
-  --namespace trunk.registry.rdoproject.org/master \
+  --tag current-tripleo \
+  --namespace docker.io/tripleomaster \
   --output-env-file=$HOME/containers.yaml \
   --template-file $HOME/tripleo-common/container-images/overcloud_containers.yaml.j2 \
   -r $HOME/tripleo-heat-templates/roles_data_undercloud.yaml \
@@ -233,7 +242,8 @@ openstack overcloud container image prepare \
   -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
   -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
   -e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \
-  -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml
+  -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services/tripleo-ui.yaml
 
 set +x
 
