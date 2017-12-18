@@ -90,10 +90,6 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # https://review.openstack.org/#/c/526147/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/5 && git cherry-pick FETCH_HEAD
 
-  # Undercloud: wire in scheduler_max_attempts
-  # https://review.openstack.org/#/c/526584/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/84/526584/1 && git cherry-pick FETCH_HEAD
-
   # undercloud_deploy: add opts to setup virtual-ips
   # https://review.openstack.org/#/c/526879/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/79/526879/2 && git cherry-pick FETCH_HEAD
@@ -138,13 +134,13 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   # https://review.openstack.org/#/c/517079/
   git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/8 && git cherry-pick FETCH_HEAD
 
-  # Add NovaSchedulerMaxAttempts parameter
-  # https://review.openstack.org/#/c/526582/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/82/526582/1 && git cherry-pick FETCH_HEAD
+  # Add enpoints for TripleO UI Config
+  # https://review.openstack.org/#/c/528679/
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/528679/1 && git cherry-pick FETCH_HEAD
 
   # tripleo ui docker
   # https://review.openstack.org/#/c/515490/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/6 && git cherry-pick FETCH_HEAD
 
   cd
 fi
@@ -243,7 +239,7 @@ openstack overcloud container image prepare \
   -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
   -e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \
   -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml \
-  -e $HOME/tripleo-heat-templates/environments/services/tripleo-ui.yaml
+  -e $HOME/tripleo-heat-templates/environments/services-docker/tripleo-ui.yaml
 
 set +x
 
