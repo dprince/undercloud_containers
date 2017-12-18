@@ -136,11 +136,11 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   # Add enpoints for TripleO UI Config
   # https://review.openstack.org/#/c/528679/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/528679/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/528679/2 && git cherry-pick FETCH_HEAD
 
   # tripleo ui docker
   # https://review.openstack.org/#/c/515490/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/6 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/7 && git cherry-pick FETCH_HEAD
 
   cd
 fi
