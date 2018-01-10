@@ -84,15 +84,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Generate undercloud-passwords.conf and fix output dir.
   # https://review.openstack.org/#/c/523511/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/11 && git cherry-pick FETCH_HEAD
-
-  # Configure undercloud docker registry/mirror
-  # https://review.openstack.org/#/c/526147/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/47/526147/5 && git cherry-pick FETCH_HEAD
-
-  # Undercloud: wire in scheduler_max_attempts
-  # https://review.openstack.org/#/c/526584/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/84/526584/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/16 && git cherry-pick FETCH_HEAD
 
   # undercloud_deploy: add opts to setup virtual-ips
   # https://review.openstack.org/#/c/526879/
@@ -102,7 +94,12 @@ if [ ! -d $HOME/python-tripleoclient ]; then
   # https://review.openstack.org/#/c/526881/
   git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/81/526881/2 && git cherry-pick FETCH_HEAD
 
+  # https://review.openstack.org/#/c/530737/ (Conflicts with the above patches)
+  # Handle user-provided TLS certificate/key for the undercloud
+  #git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/37/530737/5 && git cherry-pick FETCH_HEAD
+
   sudo python setup.py install
+
   cd
 fi
 
@@ -122,17 +119,9 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
 
   cd tripleo-heat-templates
 
-  # Add docker-registry service
-  # https://review.openstack.org/#/c/526132/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/32/526132/3 && git cherry-pick FETCH_HEAD
-
   # Add tls roles for undercloud
   # https://review.openstack.org/#/c/517079/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/8 && git cherry-pick FETCH_HEAD
-
-  # Add NovaSchedulerMaxAttempts parameter
-  # https://review.openstack.org/#/c/526582/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/82/526582/1 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/11 && git cherry-pick FETCH_HEAD
 
   # tripleo ui docker
   # https://review.openstack.org/#/c/515490/
