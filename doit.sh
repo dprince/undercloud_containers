@@ -84,7 +84,7 @@ if [ ! -d $HOME/python-tripleoclient ]; then
 
   # Generate undercloud-passwords.conf and fix output dir.
   # https://review.openstack.org/#/c/523511/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/17 && git cherry-pick FETCH_HEAD
+  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/20 && git cherry-pick FETCH_HEAD
 
   # undercloud_deploy: add opts to setup virtual-ips
   # https://review.openstack.org/#/c/526879/
