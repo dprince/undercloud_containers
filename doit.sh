@@ -24,7 +24,8 @@ git clone https://git.openstack.org/openstack/tripleo-repos
 cd tripleo-repos
 sudo python setup.py install
 cd
-sudo tripleo-repos current
+#sudo tripleo-repos current
+sudo tripleo-repos current-tripleo
 
 sudo yum -y update
 
@@ -51,6 +52,9 @@ sudo yum install -y \
   openstack-tripleo-heat-templates \
   openstack-puppet-modules \
   openstack-heat-monolith #required as we now use --heat-native
+
+  #FIXME replace above with once it lands in RDO:
+  # sudo yum install -y python-tripleoclient-heat-install
 cd
 
 sudo systemctl start openvswitch
@@ -58,45 +62,11 @@ sudo systemctl enable openvswitch
 
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
-sudo mkdir -p /etc/puppet/hieradata/
-sudo tee /etc/puppet/hieradata/docker_setup.yaml /etc/puppet/hiera.yaml <<-EOF_CAT
----
-:backends:
-  - yaml
-:yaml:
-  :datadir: /etc/puppet/hieradata
-:hierarchy:
-  - docker_setup
-EOF_CAT
-
-echo "step: 5" | sudo tee /etc/puppet/hieradata/docker_setup.yaml
-if [ -n "$LOCAL_REGISTRY" ]; then
-  echo "tripleo::profile::base::docker::insecure_registry_address: $LOCAL_REGISTRY" | sudo tee -a /etc/puppet/hieradata/docker_setup.yaml
-fi
-
-cd
-sudo puppet apply --modulepath /etc/puppet/modules --execute "include ::tripleo::profile::base::docker"
 
 # PYTHON TRIPLEOCLIENT
 if [ ! -d $HOME/python-tripleoclient ]; then
   git clone git://git.openstack.org/openstack/python-tripleoclient
   cd python-tripleoclient
-
-  # Generate undercloud-passwords.conf and fix output dir.
-  # https://review.openstack.org/#/c/523511/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/11/523511/22 && git cherry-pick FETCH_HEAD
-
-  # undercloud_deploy: add opts to setup virtual-ips
-  # https://review.openstack.org/#/c/526879/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/79/526879/2 && git cherry-pick FETCH_HEAD
-
-  # undercloud_config: setup VIPs, haproxy, etc
-  # https://review.openstack.org/#/c/526881/
-  git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/81/526881/2 && git cherry-pick FETCH_HEAD
-
-  # https://review.openstack.org/#/c/530737/ (Conflicts with the above patches)
-  # Handle user-provided TLS certificate/key for the undercloud
-  #git fetch https://git.openstack.org/openstack/python-tripleoclient refs/changes/37/530737/5 && git cherry-pick FETCH_HEAD
 
   sudo python setup.py install
 
@@ -116,30 +86,32 @@ fi
 if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
-
   cd tripleo-heat-templates
 
-  # Add tls roles for undercloud
-  # https://review.openstack.org/#/c/517079/
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/517079/11 && git cherry-pick FETCH_HEAD
+  # https://review.openstack.org/552879 Set TripleoUI bind_host via ServiceNetMap
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/552879/6 && git cherry-pick FETCH_HEAD
 
-  # tripleo ui docker
-  # https://review.openstack.org/#/c/515490/
-  # git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/90/515490/1 && git cherry-pick FETCH_HEAD
 
-  cd
 fi
 
-# Puppet TripleO
-# if [ ! -d $HOME/puppet-tripleo ]; then
-#   cd
-#   git clone git://git.openstack.org/openstack/puppet-tripleo
-#   cd puppet-tripleo
+ Puppet TripleO
+ if [ ! -d $HOME/puppet-tripleo ]; then
+   cd
+   git clone git://git.openstack.org/openstack/puppet-tripleo
+   cd puppet-tripleo
 
-#   cd /usr/share/openstack-puppet/modules
-#   sudo rm -Rf tripleo
-#   sudo cp -a $HOME/puppet-tripleo tripleo
-# fi
+   # https://review.openstack.org/#/c/552647/
+   # Add configuration for the Nova proxy endpoint
+   git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/47/552647/2 && git cherry-pick FETCH_HEAD
+
+   # Include cors modules for Nova, Ironic Inspector
+   # https://review.openstack.org/#/c/553981/
+   git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/81/553981/2 && git checkout FETCH_HEAD
+
+   cd /usr/share/openstack-puppet/modules
+   sudo rm -Rf tripleo
+   sudo cp -a $HOME/puppet-tripleo tripleo
+ fi
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT

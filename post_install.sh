@@ -1,4 +1,5 @@
 source stackrc
+set -x
 
 # Manually copy these in because python-tripleoclient assumes it is
 # on local disk and fails remotely
@@ -12,11 +13,14 @@ openstack overcloud node import testenv.json --provide
 
 for X in $(ironic node-list | grep 'None' | cut -d ' ' -f 2); do
   ironic node-update $X add driver_info/deploy_forces_oob_reboot=True
+  openstack overcloud node configure $X
 done
 
 #OS_IMAGE_API_VERSION=2 load-image -d overcloud-full.qcow2
-openstack baremetal configure boot
+#openstack baremetal configure boot
+#openstack overcloud node configure
 
+openstack keypair delete default
 nova keypair-add --pub-key ~/.ssh/id_rsa.pub default
 
 if [[ "$USER" == 'dprince' ]]; then
