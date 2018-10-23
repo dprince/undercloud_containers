@@ -11,7 +11,7 @@ sudo setenforce permissive
   #sudo yum -y reinstall python-heat-agent
 #fi
 
-sudo yum -y install curl vim-enhanced telnet epel-release ruby rubygems yum-plugins-priorities deltarpm
+sudo yum -y install curl vim-enhanced telnet epel-release ruby rubygems yum-plugins-priorities deltarpm git
 sudo yum -y install https://dprince.fedorapeople.org/tmate-2.2.1-1.el7.centos.x86_64.rpm
 
 sudo gem install lolcat
@@ -60,6 +60,14 @@ cd
 sudo systemctl start openvswitch
 sudo systemctl enable openvswitch
 
+if [ ! -d $HOME/puppet-crane ]; then
+  cd
+  git clone https://github.com/dprince/puppet-crane.git
+  cd /usr/share/openstack-puppet/modules
+  #sudo rm -Rf crane
+  sudo cp -a $HOME/puppet-crane crane
+fi
+
 sudo mkdir -p /etc/puppet/modules/
 sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
@@ -87,31 +95,9 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
-
-  # https://review.openstack.org/552879 Set TripleoUI bind_host via ServiceNetMap
-  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/79/552879/6 && git cherry-pick FETCH_HEAD
-
+  python tools/process_templates.py
 
 fi
-
- Puppet TripleO
- if [ ! -d $HOME/puppet-tripleo ]; then
-   cd
-   git clone git://git.openstack.org/openstack/puppet-tripleo
-   cd puppet-tripleo
-
-   # https://review.openstack.org/#/c/552647/
-   # Add configuration for the Nova proxy endpoint
-   git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/47/552647/2 && git cherry-pick FETCH_HEAD
-
-   # Include cors modules for Nova, Ironic Inspector
-   # https://review.openstack.org/#/c/553981/
-   git fetch https://git.openstack.org/openstack/puppet-tripleo refs/changes/81/553981/2 && git checkout FETCH_HEAD
-
-   cd /usr/share/openstack-puppet/modules
-   sudo rm -Rf tripleo
-   sudo cp -a $HOME/puppet-tripleo tripleo
- fi
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
