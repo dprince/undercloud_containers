@@ -36,40 +36,13 @@ if [ ! -f $HOME/.gitconfig ]; then
 fi
 
 sudo yum clean all
-sudo yum install -y \
-  python-heat-agent \
-  python-heat-agent-ansible \
-  python-heat-agent-hiera \
-  python-heat-agent-apply-config \
-  python-heat-agent-docker-cmd \
-  python-heat-agent-json-file \
-  python-heat-agent-puppet python-ipaddr \
-  python-tripleoclient \
-  docker \
-  docker-distribution \
-  openvswitch \
-  openstack-tripleo-common \
-  openstack-tripleo-heat-templates \
-  openstack-puppet-modules \
-  openstack-heat-monolith #required as we now use --heat-native
+sudo yum install -y python-tripleoclient
 
-  #FIXME replace above with once it lands in RDO:
-  # sudo yum install -y python-tripleoclient-heat-install
-cd
+#sudo systemctl start openvswitch
+#sudo systemctl enable openvswitch
 
-sudo systemctl start openvswitch
-sudo systemctl enable openvswitch
-
-if [ ! -d $HOME/puppet-crane ]; then
-  cd
-  git clone https://github.com/dprince/puppet-crane.git
-  cd /usr/share/openstack-puppet/modules
-  #sudo rm -Rf crane
-  sudo cp -a $HOME/puppet-crane crane
-fi
-
-sudo mkdir -p /etc/puppet/modules/
-sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
+#sudo mkdir -p /etc/puppet/modules/
+#sudo ln -f -s /usr/share/openstack-puppet/modules/* /etc/puppet/modules/
 
 # PYTHON TRIPLEOCLIENT
 if [ ! -d $HOME/python-tripleoclient ]; then
@@ -95,9 +68,18 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
-  python tools/process_templates.py
-
 fi
+
+ #Puppet TripleO
+ #if [ ! -d $HOME/puppet-tripleo ]; then
+   #cd
+   #git clone git://git.openstack.org/openstack/puppet-tripleo
+   #cd puppet-tripleo
+
+   #cd /usr/share/openstack-puppet/modules
+   #sudo rm -Rf tripleo
+   #sudo cp -a $HOME/puppet-tripleo tripleo
+ #fi
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT
@@ -158,6 +140,8 @@ network_gateway=$DEFAULT_ROUTE
 enable_ironic=true
 enable_ironic_inspector=true
 enable_zaqar=true
+enable_ui=true
+enable_validations=true
 enable_mistral=true
 custom_env_files=$HOME/containers.yaml
 EOF_CAT
@@ -171,16 +155,17 @@ EOF_CAT
 #openstack overcloud container image prepare --namespace=172.19.0.2:8787/tripleoupstream --env-file=$HOME/containers.yaml
 
 openstack overcloud container image prepare \
-  --tag tripleo-ci-testing \
-  --namespace trunk.registry.rdoproject.org/master \
+  --tag current-tripleo \
+  --namespace docker.io/tripleomaster \
   --output-env-file=$HOME/containers.yaml \
   --template-file $HOME/tripleo-common/container-images/overcloud_containers.yaml.j2 \
   -r $HOME/tripleo-heat-templates/roles_data_undercloud.yaml \
   -e $HOME/tripleo-heat-templates/environments/docker.yaml \
-  -e $HOME/tripleo-heat-templates/environments/services-docker/mistral.yaml \
-  -e $HOME/tripleo-heat-templates/environments/services-docker/ironic.yaml \
-  -e $HOME/tripleo-heat-templates/environments/services-docker/ironic-inspector.yaml \
-  -e $HOME/tripleo-heat-templates/environments/services-docker/zaqar.yaml
+  -e $HOME/tripleo-heat-templates/environments/services/mistral.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services/ironic.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services/ironic-inspector.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services/tripleo-ui.yaml \
+  -e $HOME/tripleo-heat-templates/environments/services/zaqar.yaml
 
 set +x
 
