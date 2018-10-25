@@ -124,8 +124,7 @@ fi
 # FIXME how to generate tripleo-heat-templates/environments/config-download-environment.yaml?
 cat > $HOME/run.sh <<-EOF_CAT
 export THT_HOME=$HOME/tripleo-heat-templates
-time openstack undercloud install --use-heat \\
-| tee openstack_undercloud_deploy.out | $cat
+time openstack undercloud install | tee openstack_undercloud_deploy.out | $cat
 EOF_CAT
 chmod 755 $HOME/run.sh
 
