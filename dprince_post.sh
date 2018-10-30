@@ -27,7 +27,7 @@ for X in $(ironic node-list | grep 'nuc' | cut -d ' ' -f 2); do
   openstack overcloud node configure $X
 done
 
-#openstack keypair delete default
+openstack keypair delete default
 nova keypair-add --pub-key ~/.ssh/id_rsa.pub default
 
 # custom flavors for dprince's environment
