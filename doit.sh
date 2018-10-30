@@ -60,7 +60,7 @@ if [ ! -d $HOME/tripleo-common ]; then
   cd tripleo-common
 
   sudo python setup.py install
-  cd
+
 fi
 
 # TRIPLEO HEAT TEMPLATES
@@ -68,6 +68,11 @@ if [ ! -d $HOME/tripleo-heat-templates ]; then
   cd
   git clone git://git.openstack.org/openstack/tripleo-heat-templates
   cd tripleo-heat-templates
+
+  # Crane: Add docker/services/crane.yaml
+  # https://review.openstack.org/#/c/609508/
+  git fetch https://git.openstack.org/openstack/tripleo-heat-templates refs/changes/08/609508/3 && git cherry-pick FETCH_HEAD
+
 fi
 
  #Puppet TripleO
@@ -80,6 +85,7 @@ fi
    #sudo rm -Rf tripleo
    #sudo cp -a $HOME/puppet-tripleo tripleo
  #fi
+sudo yum -y install http://fedorapeople.org/~dprince/puppet-crane-0.0.0-1.noarch.rpm
 
 # this is how you inject an admin password
 cat > $HOME/tripleo-undercloud-passwords.yaml <<-EOF_CAT

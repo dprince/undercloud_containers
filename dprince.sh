@@ -35,11 +35,6 @@ local_interface=eth0
 local_ip=$LOCAL_IP/24
 undercloud_nameservers = 8.8.8.8
 undercloud_debug=false
-network_gateway = 172.19.0.1
-network_cidr = 172.19.0.0/24
-dhcp_start = 172.19.0.6
-dhcp_end = 172.19.0.20
-inspection_iprange=172.19.0.21,172.19.0.40
 enable_ironic=true
 enable_ironic_inspector=true
 enable_zaqar=true
@@ -52,6 +47,13 @@ generate_service_certificate=false
 undercloud_public_host = 172.19.0.4
 undercloud_admin_host = 172.19.0.5
 container_images_file=/home/stack/containers.yaml
+
+[ctlplane-subnet]
+cidr = 172.19.0.0/24
+gateway = 172.19.0.1
+inspection_iprange=172.19.0.21,172.19.0.40
+dhcp_start = 172.19.0.6
+dhcp_end = 172.19.0.20
 EOF_CAT
 chmod 755 $HOME/run.sh
 
